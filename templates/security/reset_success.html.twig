@@ -1,0 +1,18 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Reset success!{% endblock %}
+
+{% block body %}
+    <h1>Votre mot de passe a bien été changé</h1>
+    <p>Vous allez être redirigé vers la page de connexion dans 3 secondes.</p>
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', function() {
+            setTimeout(function() {
+                window.location.href = "{{ path('app_login') }}";
+            }, 3000);
+        });
+    </script>
+{% endblock %}

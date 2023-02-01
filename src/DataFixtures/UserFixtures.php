@@ -19,6 +19,7 @@ class UserFixtures extends Fixture
                 ->setFirstname("client" . $i . "_firstname")
                 ->setLastname("client" . $i . "_lastname")
                 ->setRoles(['ROLE_CLIENT'])
+                ->setIsVerified(true)
             ;
             $manager->persist($user);
         }
@@ -30,6 +31,7 @@ class UserFixtures extends Fixture
             ->setFirstname("manager_firstname")
             ->setLastname("manager_lastname")
             ->setRoles(['ROLE_MANAGER'])
+            ->setIsVerified(true)
         ;
         $manager->persist($user);
 
@@ -39,6 +41,7 @@ class UserFixtures extends Fixture
             ->setFirstname("employee_firstname")
             ->setLastname("employee_lastname")
             ->setRoles(['ROLE_EMPLOYEE'])
+            ->setIsVerified(true)
         ;
         $manager->persist($user);
 
