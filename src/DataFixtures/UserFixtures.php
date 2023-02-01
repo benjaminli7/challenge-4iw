@@ -21,9 +21,8 @@ class UserFixtures extends Fixture
                 ->setRoles(['ROLE_CLIENT'])
             ;
             $manager->persist($user);
+
         }
-
-
         $user = (new User())
             ->setEmail('manager@user.fr')
             ->setPlainPassword($pwd)
