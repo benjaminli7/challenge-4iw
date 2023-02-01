@@ -1,24 +1,23 @@
 <!DOCTYPE html>
 
-<title>Category</title>
+<title>Categorie</title>
 
 {% block body %}
-    <h1>Category: {{ category.name }}</h1>
+    <h1>Categorie: {{ category.name }}</h1>
+
 
     <h2>Articles</h2>
     <ul>
         {% for article in category.articles %}
-            <li>{{ article.name }}</li>
+            <li><a href="{{ path('client_article_show', {'id': article.id}) }}">{{ article.name }}</a></li>
+        {% else %}
+            <tr>
+                <td colspan="3">Aucun article dans cette categorie</td>
+            </tr>
         {% endfor %}
-        <a href="{{ path('front_app_article_new') }}">Ajouter un article</a>
-
     </ul>
 
-
-    <a href="{{ path('front_app_category_index') }}">Retour a la liste</a><br>
-
-    <a href="{{ path('front_app_category_edit', {'id': category.id}) }}">Edit</a>
+    <a href="{{ path('client_category_index') }}">back to list</a>
 
 
-    {{ include('front/category/_delete_form.html.twig') }}
 {% endblock %}
