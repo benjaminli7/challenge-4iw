@@ -35,6 +35,7 @@ class SecurityController extends AbstractController
     public function create(Request $request, UserRepository $userRepository): Response
     {
         $user = new User();
+        $user->setRoles(["ROLE_CLIENT"]);
         $form = $this->createForm(\App\Form\UserType::class, $user);
 
         $form->handleRequest($request);

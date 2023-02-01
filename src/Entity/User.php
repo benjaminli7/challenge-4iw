@@ -10,6 +10,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
@@ -22,6 +23,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank(message: 'Cette valeur ne peut pas être vide.')]
+    #[Assert\Type('string', message: 'Cette valeur doit être une chaine de caractère.')]
+    private ?string $firstName = null;
+
+    #[ORM\Column]
+    #[Assert\NotBlank(message: 'Cette valeur ne peut pas être vide.')]
+    #[Assert\Type('string', message: 'Cette valeur doit être une chaine de caractère.')]
+    private ?string $lastName = null;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
@@ -43,6 +54,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getFirstname(): ?string
+    {
+        return $this->firstName;
+    }
+
+    public function setFirstname(string $firstName): self
+    {
+        $this->firstName = $firstName;
+
+        return $this;
+    }
+
+    public function getLastname(): ?string
+    {
+        return $this->lastName;
+    }
+
+    public function setLastname(string $lastName): self
+    {
+        $this->lastName = $lastName;
+
+        return $this;
     }
 
     public function getEmail(): ?string

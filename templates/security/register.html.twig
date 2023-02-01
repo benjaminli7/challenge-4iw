@@ -3,5 +3,8 @@
 {% block title %}Register!{% endblock %}
 
 {% block body %}
-    <h1>register</h1>
+    {{ form_start(form) }}
+        {{ form_rest(form) }}
+        <input type="submit" value="S'enregistrer">
+    {{ form_end(form) }}
 {% endblock %}
