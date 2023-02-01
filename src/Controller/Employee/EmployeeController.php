@@ -11,6 +11,7 @@ class EmployeeController extends AbstractController
     #[Route('/', name: 'default_index')]
     public function index(): Response
     {
+
         return $this->render('back/employee/index.html.twig', [
             'controller_name' => 'EmployeeView',
         ]);
