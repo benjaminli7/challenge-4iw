@@ -4,6 +4,8 @@ namespace App\Form;
 
 use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -14,7 +16,31 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email')
+            ->add('email', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter an email',
+                    ]),
+                    new Email([
+                        'message' => 'Please enter a valid email',
+                    ]),
+                ],
+            ])
+            // first name not blank
+            ->add('firstName', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a first name',
+                    ]),
+                ],
+            ])
+            ->add('lastName', null, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Please enter a last name',
+                    ]),
+                ],
+            ])
             ->add('plainPassword', RepeatedType::class, [
                 'type' => PasswordType::class
             ])
