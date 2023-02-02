@@ -208,6 +208,24 @@ class SecurityController extends AbstractController
     }
 
 
+    #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
+    public function profile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(\App\Form\UserType::class, $this->getUser());
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('client_default_index');
+        }
+
+        return $this->render('security/profile.html.twig', [
+            'form' => $form->createView()
+        ]);
+    }
+
+
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
