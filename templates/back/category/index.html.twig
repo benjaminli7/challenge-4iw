@@ -19,8 +19,8 @@
                 <td>{{ category.id }}</td>
                 <td>{{ category.name }}</td>
                 <td>
-                    <a href="{{ path('front_category_show', {'id': category.id}) }}">show</a>
-                    <a href="{{ path('front_category_edit', {'id': category.id}) }}">edit</a>
+                    <a href="{{ path('admin_category_show', {'id': category.id}) }}">show</a>
+                    <a href="{{ path('admin_category_edit', {'id': category.id}) }}">edit</a>
                 </td>
             </tr>
         {% else %}
@@ -31,5 +31,5 @@
         </tbody>
     </table>
 
-    <a href="{{ path('front_category_new') }}">Create new</a>
+    <a href="{{ path('admin_category_new') }}">Create new</a>
 {% endblock %}

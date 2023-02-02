@@ -37,7 +37,7 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $articleRepository->save($article, true);
 
-            return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/article/new.html.twig', [
@@ -63,7 +63,7 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $articleRepository->save($article, true);
 
-            return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_article_index', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/article/edit.html.twig', [
@@ -79,6 +79,6 @@ class ArticleController extends AbstractController
             $articleRepository->remove($article, true);
         }
 
-        return $this->redirectToRoute('article_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_article_index', [], Response::HTTP_SEE_OTHER);
     }
 }
