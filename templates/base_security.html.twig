@@ -14,8 +14,9 @@
         {% endblock %}
     </head>
     <body>
-        {% if is_granted('ROLE_MANAGER') %}<a href="{{ path('admin_default_index') }}">Panel d'admin</a>{% endif %}
-        {% if is_granted('ROLE_EMPLOYEE') %}<a href="{{ path('employee_default_index') }}">Panel employee</a>{% endif %}
-        {% block body %}{% endblock %}
+        <div class="security">
+
+            {% block body %}{% endblock %}
+        </div>
     </body>
 </html>

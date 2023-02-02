@@ -4,7 +4,9 @@
 
 {% block body %}
     {{ form_start(form) }}
-        {{ form_rest(form) }}
+        {% for row in form %}
+            {{ form_row(row, {'row_attr': {'class': 'custom-class'}}) }}
+        {% endfor %}
         <input type="submit" value="S'enregistrer">
     {{ form_end(form) }}
 {% endblock %}

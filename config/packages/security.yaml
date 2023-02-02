@@ -40,6 +40,7 @@ security:
         - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
         - { path: ^/reset-password, roles: PUBLIC_ACCESS }
         - { path: ^/reset-success, roles: PUBLIC_ACCESS }
+        - { path: ^/profile, roles: ROLE_CLIENT }
         - { path: ^/, roles: ROLE_CLIENT }
 
     role_hierarchy:
