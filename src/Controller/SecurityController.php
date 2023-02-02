@@ -50,7 +50,6 @@ class SecurityController extends AbstractController
             
             try {
                 // $apiInstance->sendTransacEmail($sendSmtpEmail);
-                dd($user);
                 $token = bin2hex(random_bytes(32));
                 $user->setToken($token);
                 $data = $form->getData();
@@ -78,7 +77,7 @@ class SecurityController extends AbstractController
                 echo $e->getMessage(),PHP_EOL;
             }
 
-            return $this->redirectToRoute('front_default_index');
+            return $this->redirectToRoute('client_default_index');
         }
 
         return $this->render('security/register.html.twig', [
