@@ -35,6 +35,11 @@ security:
         - { path: ^/employee, roles: ROLE_EMPLOYEE }
         - { path: ^/login, roles: PUBLIC_ACCESS }
         - { path: ^/register, roles: PUBLIC_ACCESS }
+        - { path: ^/verify_email, roles: PUBLIC_ACCESS }
+        - { path: ^/verify_success, roles: PUBLIC_ACCESS }
+        - { path: ^/forgot-password, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-password, roles: PUBLIC_ACCESS }
+        - { path: ^/reset-success, roles: PUBLIC_ACCESS }
         - { path: ^/, roles: ROLE_CLIENT }
 
     role_hierarchy:
