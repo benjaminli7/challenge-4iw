@@ -1,10 +1,59 @@
-{% extends 'base_front.html.twig' %}
+{% extends 'base_security.html.twig' %}
 
-{% block title %}Register!{% endblock %}
+{% block title %}B+B - Créez votre compte!{% endblock %}
 
 {% block body %}
-    {{ form_start(form) }}
+    {# {{ form_start(form) }}
         {{ form_rest(form) }}
         <input type="submit" value="S'enregistrer">
-    {{ form_end(form) }}
+    {{ form_end(form) }} #}
+
+
+
+
+    <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 flex flex-col gap-4 justify-center items-center w-[300px]"> 
+        <img src="{{ asset('images/logo.png') }}" />
+        <div class="rounded-3xl w-full bg-white opacity-90">
+            {# <form method="post" class="flex flex-col gap-6 px-4 py-8">
+                {% if error %}
+                    <div class="bg-red-500 text-white p-3 rounded-3xl">
+                        <p class="text-sm text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
+                    </div>
+                {% endif %}
+
+                <div class="relative">
+                    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="text-sm bg-primary-gray form-control w-full rounded-full px-4 py-2 pr-8" autocomplete="email" required autofocus placeholder="Adresse e-mail">
+                    <div class="absolute right-0 top-0 h-full flex items-center px-3">
+                        <i class="fas fa-user text-gray-500"></i>
+                    </div>
+                </div>
+                <div class="flex flex-col gap-4 items-center">
+                    <div class="relative w-full">
+                        <input type="password" name="password" id="inputPassword" class="text-sm bg-primary-gray form-control w-full rounded-full px-4 py-2 pr-8" autocomplete="current-password" required placeholder="Mot de passe">
+                        <div class="absolute right-0 top-0 h-full flex items-center px-3">
+                            <i class="fas fa-eye-slash text-gray-500"></i>
+                        </div>
+                    </div>
+                    <a href="{{ path('forgot_password') }}" class="text-sm underline text-primary-red">Mot de passe oublié ?</a>
+                </div>
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+                <button class="btn-security" type="submit">
+                    Se connecter
+                </button>
+                <a href="{{ path('register') }}" class="text-primary-red text-sm text-center">Première connexion? <span class="font-bold">Inscrivez-vous!</span></a>
+            </form> #}
+            {{ form_start(form) }}
+                {% if form_errors(form) %}
+                    <div class="bg-red-500 text-white p-3 rounded-3xl">
+                        {{ form_errors(form) }}
+                    </div>
+                {% endif %}
+
+                {% for row in form %}
+                    {{ form_row(row, {'row_attr': {'class': 'relative'}}) }}
+                {% endfor %}
+            {{ form_end(form) }}
+        </div>
+    </div>
+
 {% endblock %}
