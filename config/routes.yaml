@@ -6,7 +6,6 @@ controllers_front:
     resource: ../src/Controller/Front
     type: attribute
     name_prefix: client_
-    prefix: /client/
 
 controllers_back:
     resource: ../src/Controller/Back
