@@ -7,7 +7,9 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\Email;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -16,35 +18,48 @@ class UserType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('email', null, [
+            ->add('email', EmailType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter an email',
+                        'message' => 'Entrez une adresse email',
                     ]),
                     new Email([
-                        'message' => 'Please enter a valid email',
+                        'message' => 'Entrez une adresse email valide',
                     ]),
                 ],
+                'attr' => [
+                    'placeholder' => 'Email',
+                ],
+                'required' => true,
             ])
-            // first name not blank
-            ->add('firstName', null, [
+            ->add('firstName', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a first name',
+                        'message' => 'Entrez votre prénom',
                     ]),
                 ],
+                'attr' => [
+                    'placeholder' => 'Prénom',
+                ],
+                'required' => true,
             ])
-            ->add('lastName', null, [
+            ->add('lastName', TextType::class, [
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a last name',
+                        'message' => 'Entrez votre nom',
                     ]),
                 ],
+                'attr' => [
+                    'placeholder' => 'Nom',
+                ],
+                'required' => true,
             ])
             ->add('plainPassword', RepeatedType::class, [
-                'first_options'  => ['label' => 'Password'],
-                'second_options' => ['label' => 'Repeat Password'],
-                'type' => PasswordType::class
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
+                'first_options'  => ['attr' => ['placeholder' => 'Mot de passe']],
+                'second_options' => ['attr' => ['placeholder' => 'Confirmation du mot de passe']],
+                'type' => PasswordType::class,
+                'required' => true,
             ])
         ;
     }

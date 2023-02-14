@@ -17,12 +17,11 @@ class ResetPasswordType extends AbstractType
     {
         $builder
             ->add('plainPassword', RepeatedType::class, [
+                'invalid_message' => 'Les mots de passe doivent correspondre.',
                 'first_options'  => ['label' => 'Password'],
                 'second_options' => ['label' => 'Repeat Password'],
-                'type' => PasswordType::class
-            ])
-            ->add('submit', SubmitType::class, [
-                'label' => 'Submit',
+                'type' => PasswordType::class,
+                'required' => true,
             ])
         ;
     }
