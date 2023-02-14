@@ -39,6 +39,10 @@
             <th>UpdatedAT</th>
             <td>{{ article.updatedAT ? article.updatedAT|date('Y-m-d H:i:s') : '' }}</td>
         </tr>
+        <tr>
+            <th>Image</th>
+            <td><img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" style="width: 150px; height: 150px"></td>
+        </tr>
         </tbody>
     </table>
 

@@ -207,7 +207,6 @@ class SecurityController extends AbstractController
                 'form' => $form->createView()
             ]);
         }
-
         return $this->render('security/reset_fail.html.twig');
     }
 

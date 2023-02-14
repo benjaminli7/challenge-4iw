@@ -15,6 +15,8 @@
                 <th>OrderCount</th>
                 <th>CreatedAt</th>
                 <th>UpdatedAT</th>
+                <th>Image</th>
+
             </tr>
         </thead>
         <tbody>
@@ -27,6 +29,11 @@
                 <td>{{ article.orderCount }}</td>
                 <td>{{ article.createdAt ? article.createdAt|date('Y-m-d H:i:s') : '' }}</td>
                 <td>{{ article.updatedAT ? article.updatedAT|date('Y-m-d H:i:s') : '' }}</td>
+                <td>
+                    {% if article.getImageName() %}
+                        <img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" style="width: 50px; height: 50px">
+                    {% endif %}</td>
+                </td>
             </tr>
         {% else %}
             <tr>
