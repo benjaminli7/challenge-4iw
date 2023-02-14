@@ -7,6 +7,8 @@ use App\Repository\ArticleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+
 
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: '`article`')]
@@ -37,6 +39,9 @@ class Article
     #[ORM\ManyToOne(targetEntity: Category::class)]
     #[ORM\JoinColumn(name: "category_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
     private ?Category $category = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $image_name = null;
 
     public function getId(): ?int
     {
@@ -87,6 +92,18 @@ class Article
     public function setOrderCount(int $orderCount): self
     {
         $this->orderCount = $orderCount;
+
+        return $this;
+    }
+
+    public function getImageName(): ?string
+    {
+        return $this->image_name;
+    }
+
+    public function setImage(?string $image_name): self
+    {
+        $this->image_name = $image_name;
 
         return $this;
     }

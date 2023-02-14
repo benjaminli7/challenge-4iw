@@ -20,7 +20,7 @@
 ###< symfony/phpunit-bridge ###
 
 ###> symfony/vich-uploader ###
-/public/upload/
+/public/uploads/
 ###< symfony/vich-uploader ###
 
 ###> MacOs gitignore ###
