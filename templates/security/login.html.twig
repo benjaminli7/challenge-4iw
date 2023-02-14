@@ -12,8 +12,16 @@
         <img src="{{ asset('images/logo.png') }}" />
         <div class="rounded-3xl w-full bg-white opacity-90">
             <form method="post" class="flex flex-col gap-6 px-4 py-8">
+                {% for message in app.flashes('success') %}
+                    <div class="alert-success">{{ message }}</div>
+                {% endfor %}
+
+                {% for message in app.flashes('danger') %}
+                    <div class="alert-danger">{{ message }}</div>
+                {% endfor %}
+                
                 {% if error %}
-                    <div class="bg-red-500 text-white p-3 rounded-3xl">
+                    <div class="alert-danger">
                         <p class="text-sm text-center">{{ error.messageKey|trans(error.messageData, 'security') }}</p>
                     </div>
                 {% endif %}
@@ -30,13 +38,13 @@
                             <i class="fas fa-eye-slash text-gray-500"></i>
                         </div>
                     </div>
-                    <a href="{{ path('forgot_password') }}" class="text-sm underline text-primary-red">Mot de passe oublié ?</a>
+                    <a href="{{ path('forgot_password') }}" class="hover text-sm underline text-primary-red">Mot de passe oublié ?</a>
                 </div>
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
-                <button class="btn-security" type="submit">
+                <button class="btn-security hover" type="submit">
                     Se connecter
                 </button>
-                <a href="{{ path('register') }}" class="text-primary-red text-sm text-center">Première connexion? <span class="font-bold">Inscrivez-vous!</span></a>
+                <a href="{{ path('register') }}" class="hover text-primary-red text-sm text-center">Première connexion? <span class="font-bold">Inscrivez-vous!</span></a>
             </form>
         </div>
     </div>
