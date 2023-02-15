@@ -59,11 +59,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     public function findUsersByRole($role)
     {
         return $this->createQueryBuilder('u')
-            ->where("JSON_EXTRACT(u.roles, '$[*]') = :role")
-            ->setParameter('role', $role)
-            ->getQuery()
-            ->getResult()
-            ;
+        ->andWhere('JSON_GET_TEXT(u.roles,0) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,1) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,2) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,3) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,4) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,5) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,6) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,7) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,8) = :role')
+        ->orWhere('JSON_GET_TEXT(u.roles,9) = :role')
+        ->setParameter('role', $role)
+        ->getQuery()
+        ->getResult();
+    
+        // return $this->createQueryBuilder('u')
+        //     ->where("JSON_EXTRACT(u.roles, '$[*]') = :role")
+        //     ->setParameter('role', $role)
+        //     ->getQuery()
+        //     ->getResult()
+        //     ;
     }
 
 //    /**

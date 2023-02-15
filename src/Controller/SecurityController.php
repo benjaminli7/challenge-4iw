@@ -55,7 +55,7 @@ class SecurityController extends AbstractController
                 $data = $form->getData();
                 $email = $data->getEmail();
 
-                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
+                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
                 $apiInstance = new TransactionalEmailsApi(new Client(),$credentials);
 
                 $link = 'https://' . $_SERVER['HTTP_HOST'];
