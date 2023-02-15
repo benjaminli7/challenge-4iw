@@ -13,9 +13,7 @@ class EmployeesController extends AbstractController
     public function index(UserRepository $userRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_MANAGER');
-
         $employees = $userRepository->findUsersByRole('ROLE_EMPLOYEE');
-        dd($employees);
         return $this->render('back/employees/index.html.twig', [
             'employees' => $employees,
         ]);
