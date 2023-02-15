@@ -55,7 +55,7 @@ class SecurityController extends AbstractController
                 $data = $form->getData();
                 $email = $data->getEmail();
 
-                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
+                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
                 $apiInstance = new TransactionalEmailsApi(new Client(),$credentials);
 
                 $link = 'https://' . $_SERVER['HTTP_HOST'];
@@ -72,12 +72,14 @@ class SecurityController extends AbstractController
                 $apiInstance->sendTransacEmail($sendSmtpEmail);
                 $user->setIsVerified(false);
                 $userRepository->save($user, true);
+                $this->addFlash('success', 'Un email de confirmation vous a été envoyé');
+                
 
             } catch (Exception $e) {
                 echo $e->getMessage(),PHP_EOL;
             }
 
-            return $this->redirectToRoute('client_default_index');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('security/register.html.twig', [
@@ -103,11 +105,12 @@ class SecurityController extends AbstractController
             $user->setToken("");
 
             $userRepository->save($user, true);
-
-            return $this->redirectToRoute('verify_success');
+            $this->addFlash('success', 'Vous pouvez maintenant vous connecter!');
+            return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/verify_fail.html.twig');
+        $this->addFlash('danger', 'Token invalide');
+        return $this->redirectToRoute('app_login');
     }
 
     #[Route(path: '/verify_success', name: 'verify_success')]
@@ -128,14 +131,17 @@ class SecurityController extends AbstractController
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $email = $data->getEmail();
+            $email = $data["email"];
             $user = $userRepository->findOneBy([
                 'email' => $email,
             ]);
+
             
             if($user) {
                 try {
-
+                    
+                    $userFirstname = $user->getFirstname();
+                    $userLastname = $user->getLastname();
                     $resetToken = bin2hex(random_bytes(16));
                     $user->setResetToken($resetToken);
                     $userRepository->save($user, true);
@@ -143,25 +149,29 @@ class SecurityController extends AbstractController
                         'token' => $resetToken,
                     ], UrlGeneratorInterface::ABSOLUTE_URL);
     
-                    $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
+                    $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
                     $apiInstance = new TransactionalEmailsApi(new Client(),$credentials);
     
                     $sendSmtpEmail = new SendSmtpEmail([
                          'subject' => 'Valider votre mail',
                          'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
                          'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                         'to' => [[ 'name' => 'Max Mustermann', 'email' => $email]],
+                         'to' => [[ 'name' => "$userFirstname $userLastname", 'email' => $email]],
                         //  'htmlContent' => '<html><body><h1>Hello, here is your confirm link {{params.confirm_link}}</h1></body></html>',
                          'htmlContent' => $this->renderView('emails/reset_password.html.twig', ['reset_password_link' => $resetPasswordLink]),
                     ]);
     
                     $apiInstance->sendTransacEmail($sendSmtpEmail);
 
-                    $this->addFlash('success', 'A reset password link has been sent to your email.');
+                    $this->addFlash('success', 'Un email de réinitialisation de mot de passe vous a été envoyé.');
                     return $this->redirectToRoute('forgot_password');
                 } catch (Exception $e) {
                     echo $e->getMessage(),PHP_EOL;
                 }
+            } else {
+                $this->addFlash('danger', 'Cette adresse email n\'existe pas.');
+                return $this->redirectToRoute('forgot_password');
+
             }
         }
 
@@ -197,7 +207,6 @@ class SecurityController extends AbstractController
                 'form' => $form->createView()
             ]);
         }
-
         return $this->render('security/reset_fail.html.twig');
     }
 
