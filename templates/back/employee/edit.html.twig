@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+
+<title>Edit Employee</title>
+
+{% block body %}
+    <h1>Edit Employee</h1>
+
+    {{ include('back/employee/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('admin_app_user_index') }}">back to list</a>
+
+    {{ include('back/employee/_delete_form.html.twig') }}
+{% endblock %}
