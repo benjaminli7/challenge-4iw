@@ -34,6 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Type('string', message: 'Cette valeur doit être une chaine de caractère.')]
     private ?string $lastName = null;
 
+    
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -56,7 +57,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $resetToken = null;
 
     #[NotBlank]
-    #[Length(min: 6)]
+    #[Length(min: 6, minMessage: 'Votre mot de passe doit faire au moins 6 caractères.')]
     private ?string $plainPassword = null;
 
 
@@ -152,7 +153,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // guarantee every user at least has ROLE_CLIENT
         $roles[] = 'ROLE_CLIENT';
 
         return array_unique($roles);

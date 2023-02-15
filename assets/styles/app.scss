@@ -1,6 +1,22 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.btn-security {
+    @apply bg-primary-red rounded-3xl py-2 text-white font-bold;
+}
+.hover {
+    @apply hover:opacity-80 transition duration-300 ease-in-out;
+}
+.alert-danger {
+    @apply bg-red-500 text-white p-3 rounded-3xl;
+}
+
+.alert-success {
+    @apply bg-green-500 text-white p-3 rounded-3xl;
+}
 
 $aqua: #52abab;
 
@@ -8,3 +24,4 @@ body {
     // background-color: $aqua;
     // color: red;
 }
+

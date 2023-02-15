@@ -1,10 +1,43 @@
-{% extends 'base_employee.html.twig' %}
+<!DOCTYPE html>
 
-{% block title %}Hello Employee view!{% endblock %}
+<title>User index</title>
 
 {% block body %}
-    <div>
-        <h1>Hello {{ controller_name }}! ✅</h1>
-        <h1>Employee view</h1>
-    </div>
+    <h1>User index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>IsVerified</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for employee in employees %}
+            <tr>
+                <td>{{ employee.id }}</td>
+                <td>{{ employee.firstName }}</td>
+                <td>{{ employee.lastName }}</td>
+                <td>{{ employee.email }}</td>
+                <td>{{ employee.roles ? employee.roles|json_encode : '' }}</td>
+                <td>{{ employee.isVerified ? 'Yes' : 'No' }}</td>
+                <td>
+                    <a href="{{ path('admin_app_user_show', {'id': employee.id}) }}">show</a>
+                    <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="12">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('admin_app_user_new') }}">Create new</a>
 {% endblock %}
