@@ -13,4 +13,9 @@ controllers_back:
     name_prefix: admin_
     prefix: /admin/
 
+controllers_employee:
+    resource: ../src/Controller/Employee
+    type: attribute
+    name_prefix: employee_
+    prefix: /employee/
 
