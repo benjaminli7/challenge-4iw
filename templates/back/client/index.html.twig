@@ -1,9 +1,9 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des employés{% endblock %}
+{% block title %}Liste des clients{% endblock %}
 
 {% block body %}
-    <h1 class="title-back">Liste des employés</h1>
+    <h1 class="title-back">Liste des clients</h1>
 
     <table id="table_id" class="styled-table">
         <thead>
@@ -18,28 +18,27 @@
             </tr>
         </thead>
         <tbody>
-            {% for employee in employees %}
+            {% for client in clients %}
                 <tr>
-                    <td>{{ employee.id }}</td>
-                    <td>{{ employee.firstName }}</td>
-                    <td>{{ employee.lastName }}</td>
-                    <td>{{ employee.email }}</td>
-                    <td>{{ employee.roles ? employee.roles|json_encode : '' }}</td>
-                    <td>{{ employee.isVerified ? 'Oui' : 'Non' }}</td>
+                    <td>{{ client.id }}</td>
+                    <td>{{ client.firstName }}</td>
+                    <td>{{ client.lastName }}</td>
+                    <td>{{ client.email }}</td>
+                    <td>{{ client.roles ? client.roles|json_encode : '' }}</td>
+                    <td>{{ client.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
-                        <a href="{{ path('admin_app_user_show', {'id': employee.id}) }}">Afficher</a>
-                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}">Editer</a>
+                        {# <a href="{{ path('admin_app_user_show', {'id': client.id}) }}">Afficher</a> #}
+                        {{ include('back/client/_delete_form.html.twig') }}
                     </td>
                 </tr>
             {% else %}
                 <tr>
-                    <td colspan="12">Aucun employé trouvé</td>
+                    <td colspan="12">Aucun client trouvé</td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('admin_app_user_new') }}">Create new</a>
 {% endblock %}
 
 {% block javascripts %}

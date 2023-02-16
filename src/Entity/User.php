@@ -56,7 +56,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $resetToken = null;
 
-    #[NotBlank]
     #[Length(min: 6, minMessage: 'Votre mot de passe doit faire au moins 6 caractères.')]
     private ?string $plainPassword = null;
 

@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+{% extends 'base_back.html.twig' %}
 
-<title>New Employee</title>
+{% block title %}New employee{% endblock %}
 
 {% block body %}
-    <h1>Create new Employee</h1>
+    <h1 class="title-back">Ajouter un employé</h1>
 
     {{ include('back/employee/_form.html.twig') }}
 
-    <a href="{{ path('admin_app_user_index') }}">back to list</a>
+    <a href="{{ path('admin_app_user_index') }}">Retourner à la liste des employés</a>
 {% endblock %}

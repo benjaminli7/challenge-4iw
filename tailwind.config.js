@@ -5,6 +5,7 @@ module.exports = {
   content: [
     "./assets/**/*.js",
     "./templates/**/*.html.twig",
+    "./node_modules/flowbite/**/*.js"
   ],
   theme: {
     colors: {
@@ -27,5 +28,7 @@ module.exports = {
       'raleway': ['Raleway', 'sans-serif'],
     }
   },
-  plugins: [],
+  plugins: [
+    require('flowbite/plugin'),
+  ],
 }
