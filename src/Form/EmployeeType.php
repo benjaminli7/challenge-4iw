@@ -11,6 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 
 
 class EmployeeType extends AbstractType
@@ -28,7 +31,7 @@ class EmployeeType extends AbstractType
                     'placeholder' => 'Prénom',
                 ],
                 'required' => true,
-                
+
             ])
             ->add('lastName', TextType::class, [
                 'constraints' => [
@@ -54,11 +57,27 @@ class EmployeeType extends AbstractType
                     'placeholder' => 'Email',
                 ],
                 'required' => true,
-            ])
-            ->add('password', PasswordType::class, [
-                'mapped' => false,
-                'required' => true,
             ]);
+            
+
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {
+            $employee = $event->getData();
+            $form = $event->getForm();
+    
+            // checks if the Employee object is "new"
+            // If no data is passed to the form, the data is "null".
+            // This should be considered a new "Employee"
+            if (!$employee || null === $employee->getId()) {
+                $form->add('plainPassword', RepeatedType::class, [
+                    'invalid_message' => 'Les mots de passe doivent correspondre.',
+                    'first_options'  => ['label' => 'Mot de passe', 'attr' => ['placeholder' => 'Mot de passe']],
+                    'second_options' => ['label' => 'Confirmation du mot de passe', 'attr' => ['placeholder' => 'Confirmation du mot de passe']],
+                    'type' => PasswordType::class,
+                    'required' => true,
+                ]);
+            }
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
