@@ -33,7 +33,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
 
-            return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/new.html.twig', [
@@ -62,7 +62,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
 
-            return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/edit.html.twig', [
@@ -78,6 +78,6 @@ class CategoryController extends AbstractController
             $categoryRepository->remove($category, true);
         }
 
-        return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
     }
 }
