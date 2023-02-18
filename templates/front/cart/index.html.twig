@@ -1,0 +1,18 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}B+B - Cart{% endblock %}
+
+{% block body %}
+<div>Cart</div>
+
+<div id="cart-items">
+    {% set cartItems = app.request.localStorage.get('cartItems')|default([]) %}
+    {{ dump(cartItems) }}
+    {% for item in cartItems %}
+        <div class="cart-item">
+            <h2>{{ item.name }}</h2>
+            <p>${{ item.price }}</p>
+        </div>
+    {% endfor %}
+</div>
+{% endblock %}
