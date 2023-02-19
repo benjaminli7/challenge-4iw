@@ -2,36 +2,35 @@
 
 namespace App\Repository;
 
-use App\Entity\Order;
+use App\Entity\OrderArticle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Order>
+ * @extends ServiceEntityRepository<OrderArticle>
  *
- * @method Order|null find($id, $lockMode = null, $lockVersion = null)
- * @method Order|null findOneBy(array $criteria, array $orderBy = null)
- * @method Order[]    findAll()
- * @method Order[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method OrderArticle|null find($id, $lockMode = null, $lockVersion = null)
+ * @method OrderArticle|null findOneBy(array $criteria, array $orderBy = null)
+ * @method OrderArticle[]    findAll()
+ * @method OrderArticle[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class OrderRepository extends ServiceEntityRepository
+class OrderArticleRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Order::class);
+        parent::__construct($registry, OrderArticle::class);
     }
 
-    public function save(Order $entity, bool $flush = false): void
+    public function save(OrderArticle $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
-        
         if ($flush) {
             $this->getEntityManager()->flush();
         }
     }
 
-    public function remove(Order $entity, bool $flush = false): void
+    public function remove(OrderArticle $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -41,7 +40,7 @@ class OrderRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Order[] Returns an array of Order objects
+//     * @return OrderArticle[] Returns an array of OrderArticle objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -55,7 +54,7 @@ class OrderRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Order
+//    public function findOneBySomeField($value): ?OrderArticle
 //    {
 //        return $this->createQueryBuilder('o')
 //            ->andWhere('o.exampleField = :val')

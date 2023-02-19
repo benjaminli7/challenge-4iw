@@ -1,7 +1,54 @@
-<!DOCTYPE html>
-
-<title>Hello EmployeesController!</title>
+{% extends 'base_front.html.twig' %}
 
 {% block body %}
-    <h1>Ecran employé</h1>
+
+    <div class="container mx-auto">
+        <h1 class="text-2xl font-bold mb-4">Orders</h1>
+        <h2 class="font-bold text-lg mb-2">ONGOING</h2>
+        <div class="grid grid-cols-3 gap-4">
+            {% for order in orders %}
+                {% if order.status == 'ONGOING' %}
+                    <div class="bg-white rounded-lg shadow-md p-4">
+                        <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                        {% set total_price = 0 %}
+                        {% for orderArticle in order.orderArticles %}
+                            <div class="mb-2">
+                                <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                            </div>
+                            {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                        {% endfor %}
+                        <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
+                        <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
+                        <button class="bg-blue-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <h2 class="font-bold text-lg mb-2">TO PICK UP</h2>
+        <div class="grid grid-cols-3 gap-4">
+            {% for order in orders %}
+                {% if order.status != 'ONGOING' %}
+                    <div class="bg-white rounded-lg shadow-md p-4">
+                        <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                        {% set total_price = 0 %}
+                        {% for orderArticle in order.orderArticles %}
+                            <div class="mb-2">
+                                <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                            </div>
+                            {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                        {% endfor %}
+                        <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
+                        <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
+                        {% if order.status == 'TO_PICK_UP' %}
+                            <button class="bg-green-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block javascripts %}
+    <script src="{{ asset('js/order_status.js') }}"></script>
 {% endblock %}
