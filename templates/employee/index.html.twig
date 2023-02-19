@@ -1,4 +1,4 @@
-{% extends 'base_front.html.twig' %}
+{% extends 'base_employee.html.twig' %}
 
 {% block body %}
 
@@ -8,8 +8,8 @@
         <div class="grid grid-cols-3 gap-4">
             {% for order in orders %}
                 {% if order.status == 'ONGOING' %}
-                    <div class="bg-white rounded-lg shadow-md p-4">
-                        <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
+                        <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                         {% set total_price = 0 %}
                         {% for orderArticle in order.orderArticles %}
                             <div class="mb-2">
@@ -19,16 +19,16 @@
                         {% endfor %}
                         <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
                         <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
-                        <button class="bg-blue-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                        <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
         <h2 class="font-bold text-lg mb-2">TO PICK UP</h2>
-        <div class="grid grid-cols-3 gap-4">
+        <div id="to-pick-up" class="grid grid-cols-3 gap-4">
             {% for order in orders %}
                 {% if order.status != 'ONGOING' %}
-                    <div class="bg-white rounded-lg shadow-md p-4">
+                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
                         <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                         {% set total_price = 0 %}
                         {% for orderArticle in order.orderArticles %}
@@ -40,7 +40,7 @@
                         <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
                         <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
                         {% if order.status == 'TO_PICK_UP' %}
-                            <button class="bg-green-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                            <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
                         {% endif %}
                     </div>
                 {% endif %}
@@ -48,7 +48,61 @@
         </div>
     </div>
 {% endblock %}
-
 {% block javascripts %}
-    <script src="{{ asset('js/order_status.js') }}"></script>
+    <script>
+        function updateOrderStatus(orderId, status) {
+            fetch(`/employee/order/${orderId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: status
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        console.log("response:", response);
+                        // console.log interesting stuff in the response
+
+
+
+                        return response.json();
+                    } else {
+                        throw new Error('Something went wrong');
+                    }
+                })
+                .then(order => {
+
+                    const pickUpButton = document.querySelector(`#ongoing-order-${orderId}`);
+                    if (pickUpButton) {
+                        pickUpButton.innerHTML = 'Terminé';
+                        pickUpButton.classList.remove('bg-blue-500');
+                        pickUpButton.classList.add('bg-green-500');
+                        pickUpButton.setAttribute('onclick', `updateOrderStatus(${orderId}, 'DONE')`);
+                        pickUpButton.id = `to-pick-up-order-${orderId}`;
+
+                        const parent = pickUpButton.closest(`#to-pick-up-${orderId}`);
+                        if (parent) {
+                            const toPickUp = document.querySelector('#to-pick-up');
+                            if (toPickUp) {
+                                parent.id = `to-pick-up-${orderId}`;
+                                toPickUp.appendChild(parent);
+                            }
+                        }
+                    } else {
+                        const doneButton = document.querySelector(`#to-pick-up-${orderId}`);
+                        console.log(doneButton);
+                        if (doneButton) {
+                            console.log(doneButton);
+                            doneButton.closest(`#to-pick-up-${orderId}`).remove();
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+
 {% endblock %}
