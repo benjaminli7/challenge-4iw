@@ -4,32 +4,29 @@
 
 {% block body %}
     {% for category in categories %}
-    <div class="mb-5">
-        <h2 class="text-xl font-bold mb-3">
-        {{ category.name }}
+        <div class="mb-5">
+            <h2 class="text-xl font-bold mb-3">{{ category.name }}</h2>
 
-        </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {% for article in category.articles %}
+                    <div class="bg-white shadow-md rounded-md overflow-hidden">
+                        {% if article.getImageName() %}
+                            <img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" class="w-full h-40 object-cover">
+                        {% else %}
+                            <img src="{{ asset('images/placeholder150.png') }}" alt="{{ article.name }} image" class="w-full h-40 object-cover">
+                        {% endif %}
 
-        <ul>
-            {% for article in category.articles %}
-                <li>
-                <div>
-                {{ article.name }}
-                {{ article.price }}
-                {% if article.getImageName() %}
-                    <img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" style="width: 150px; height: 150px">
-                {% else %}
-                    <img src="{{ asset('images/placeholder150.png') }}" alt="{{ article.name }} image" style="width: 150px; height: 150px">
-                {% endif %}
-                </div>
-                </li>
-                <button class="add-to-cart" data-name="{{ article.name }}" data-price="{{ article.price }}">Add to cart</button>
-            {% endfor %}
-        </ul>
-    </div>
+                        <div class="p-3">
+                            <h3 class="font-semibold text-lg">{{ article.name }}</h3>
+                            <p class="text-gray-500 text-sm">{{ article.price }}</p>
+
+                            <button class="mt-2 py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-300 ease-in-out text-sm" data-name="{{ article.name }}" data-price="{{ article.price }}">Add to cart</button>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
     {% endfor %}
 
-
-    <a href="{{ path("client_app_cart") }}">Go to cart screen</a>
-
+    <a href="{{ path("client_app_cart") }}" class="inline-block mt-4 py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-300 ease-in-out text-sm">Go to cart screen</a>
 {% endblock %}

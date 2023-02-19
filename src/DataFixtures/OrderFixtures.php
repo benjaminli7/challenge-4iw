@@ -23,21 +23,21 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
         $article4 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Eau']);
         
         $order1 = (new Order())
-            ->setStatus('pending')
+            ->setStatus('ONGOING')
             ->setDate(new \DateTime())
             ->setClient($user1)
-            ->addArticle($article1)
-            ->addArticle($article2)
+            ->addArticle($article1, 2)
+            ->addArticle($article2, 3)
         ;
 
         $manager->persist($order1);
 
         $order2 = (new Order())
-            ->setStatus('pending')
+            ->setStatus('ONGOING')
             ->setDate(new \DateTime())
             ->setClient($user2)
-            ->addArticle($article3)
-            ->addArticle($article4)
+            ->addArticle($article3, 1)
+            ->addArticle($article4, 2)
         ;
         $manager->persist($order2);
 

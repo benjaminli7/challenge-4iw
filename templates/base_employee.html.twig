@@ -17,5 +17,8 @@
     <body>
         <h1>base_employee</h1>
         {% block body %}{% endblock %}
+        {% block javascripts %}
+            <script src="{{ asset('js/order_status.js') }}"></script>
+        {% endblock %}
     </body>
 </html>
