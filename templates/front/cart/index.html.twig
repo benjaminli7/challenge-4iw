@@ -6,13 +6,33 @@
 <div>Cart</div>
 
 <div id="cart-items">
-    {% set cartItems = app.request.localStorage.get('cartItems')|default([]) %}
+    {# {% set cartItems = app.request.localStorage.get('cartItems')|default([]) %}
     {{ dump(cartItems) }}
     {% for item in cartItems %}
         <div class="cart-item">
             <h2>{{ item.name }}</h2>
             <p>${{ item.price }}</p>
         </div>
-    {% endfor %}
+    {% endfor %} #}
 </div>
+
+<script>
+
+    // Retrieve cart items from localStorage
+    const cartItems = JSON.parse(localStorage.getItem('cartItems')) || [];
+
+    // Display cart items in the DOM
+    const cartItemsContainer = document.getElementById('cart-items');
+    for (const item of cartItems) {
+        const cartItem = document.createElement('div');
+        cartItem.className = 'cart-item';
+        cartItem.innerHTML = `
+            <h2>${item.name}</h2>
+            <p>$${item.price}</p>
+        `;
+        cartItemsContainer.appendChild(cartItem);
+    }
+</script>
+
+
 {% endblock %}
