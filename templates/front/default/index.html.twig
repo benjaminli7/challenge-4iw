@@ -23,13 +23,13 @@
                 {% endif %}
                 </div>
                 </li>
-                <button class="add-to-cart" data-name="{{ article.name }}" data-price="{{ article.price }}">Add to cart</button>
+                <button class="add-to-cart" data-name="{{ article.name }}" data-price="{{ article.price }}" data-id="{{ article.id }}">Add to cart</button>
             {% endfor %}
         </ul>
     </div>
     {% endfor %}
 
 
-    <a href="{{ path("client_app_cart") }}">Go to cart screen</a>
+    <a href="{{ path("client_app_cart") }}">Go to cart screen <span class="cart-count"></span></a>
 
 {% endblock %}
