@@ -8,7 +8,7 @@ parameters:
     TWILIO_ACCOUNT_SID: '%env(TWILIO_ACCOUNT_SID)%'
     TWILIO_AUTH_TOKEN: '%env(TWILIO_AUTH_TOKEN)%'
     TWILIO_PHONE_NUMBER: '%env(TWILIO_PHONE_NUMBER)%'
-
+    STRIPE_SECRET: '%env(STRIPE_SECRET)%'
     article_directory: '%kernel.project_dir%/public/uploads/articles'
 
 services:
