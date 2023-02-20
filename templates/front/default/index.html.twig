@@ -23,13 +23,41 @@
                 {% endif %}
                 </div>
                 </li>
-                <button class="add-to-cart" data-name="{{ article.name }}" data-price="{{ article.price }}" data-id="{{ article.id }}">Add to cart</button>
+                <button class="add-to-cart" data-article-id="{{ article.id }}">Add to Cart</button>
             {% endfor %}
         </ul>
     </div>
     {% endfor %}
 
+    <a href="{{ path("client_app_cart") }}">Go to cart screen <span id="cart-item-count">{{ cart_quantity }}</span></a>
 
-    <a href="{{ path("client_app_cart") }}">Go to cart screen <span class="cart-count"></span></a>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+            addToCartButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var articleId = button.dataset.articleId;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/cart/add-to-cart/' + articleId);
+                    xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange = function() {
+                        if (xhr.readyState === XMLHttpRequest.DONE && xhr.status === 200) {
+                            var response = JSON.parse(xhr.responseText);
+                            if (response.success) {
+                                var cartItemCount = document.getElementById('cart-item-count');
+                                var count = response.cartItemCount;
+                                cartItemCount.textContent = count;
+                            }
+                        }
+                    };
+                    xhr.send();
+                });
+            });
+        });
+    </script>
 
 {% endblock %}
