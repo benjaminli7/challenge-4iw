@@ -6,7 +6,7 @@
         <h1 class="text-2xl font-bold mb-4">Orders</h1>
         <h2 class="font-bold text-lg mb-2">ONGOING</h2>
         <div class="grid grid-cols-3 gap-4">
-            {% for order in orders %}
+            {% for order in orders|sort((a, b) => b.id <=> a.id) %}
                 {% if order.status == 'ONGOING' %}
                     <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
                         <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
@@ -18,7 +18,7 @@
                             {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
                         {% endfor %}
                         <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
-                        <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
+                        <div class="text-sm mb-2">Order Number: {{ order.id }}</div>
                         <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
                     </div>
                 {% endif %}
