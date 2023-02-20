@@ -50,6 +50,7 @@
         "symfony/yaml": "6.1.*",
         "twig/extra-bundle": "^2.12|^3.0",
         "twig/twig": "^2.12|^3.0",
+        "twilio/sdk": "^6.44",
         "vich/uploader-bundle": "^2.0"
     },
     "config": {

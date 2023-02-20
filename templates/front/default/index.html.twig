@@ -4,11 +4,8 @@
 
 {% block body %}
     {% for category in categories %}
-    <div class="mb-5">
-        <h2 class="text-xl font-bold mb-3">
-        {{ category.name }}
-
-        </h2>
+        <div class="mb-5">
+            <h2 class="text-xl font-bold mb-3">{{ category.name }}</h2>
 
         <ul>
             {% for article in category.articles %}

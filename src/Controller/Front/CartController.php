@@ -8,7 +8,9 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use App\Entity\Article;
+use App\Entity\Order;
 use App\Repository\ArticleRepository;
+use App\Repository\OrderRepository;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
 
@@ -89,12 +91,35 @@ class CartController extends AbstractController
 
 
     #[Route('/checkout/success', name: 'checkout_success')]
-    public function checkoutSuccess(Request $request): Response
+    public function checkoutSuccess(Request $request, ArticleRepository $articleRepository, OrderRepository $orderRepository): Response
     {
+
+        $cart = $request->getSession()->get('cart', []);
+
+        $user = $this->getUser();
+
+        
+        $order = (new Order())
+        ->setStatus('ONGOING')
+        ->setDate(new \DateTime())
+        ->setClient($user)
+        ;
+        
+        foreach ($cart as $articleId => $quantity) {
+            $article = $articleRepository->find($articleId);
+    
+            if ($article) {
+                $order->addArticle($article, $quantity['quantity']);
+            }
+        }
+
+        $orderRepository->save($order, true);
 
         $request->getSession()->remove('cart');
 
-        return $this->render('front/cart/checkout_success.html.twig');
+        return $this->render('front/cart/checkout_success.html.twig', [
+            'orderId' => $order->getId(),
+        ]);
     }
 
     #[Route('/checkout/cancel', name: 'checkout_cancel')]
