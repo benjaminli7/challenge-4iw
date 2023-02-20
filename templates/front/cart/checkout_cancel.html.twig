@@ -1,0 +1,12 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}B+B - Cart{% endblock %}
+
+{% block body %}
+<div>Cart</div>
+
+<h1>Désolé, votre paiement a échoué...</h1>
+
+<a href="{{ path('client_app_cart')}}">Retourner au panier</a>
+
+{% endblock %}
