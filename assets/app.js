@@ -3,9 +3,12 @@ import 'flowbite';
 
 // client
 window.addEventListener('load', function() {
+  updateCartCount();
+
     const addButtons = document.querySelectorAll('.add-to-cart');
     addButtons.forEach(button => {
       button.addEventListener('click', function() {
+        const id = button.dataset.id;
         const name = button.dataset.name;
         const price = button.dataset.price;
         addToCart(name, price);
