@@ -4,11 +4,8 @@
 
 {% block body %}
     {% for category in categories %}
-    <div class="mb-5">
-        <h2 class="text-xl font-bold mb-3">
-        {{ category.name }}
-
-        </h2>
+        <div class="mb-5">
+            <h2 class="text-xl font-bold mb-3">{{ category.name }}</h2>
 
         <ul>
             {% for article in category.articles %}
@@ -61,4 +58,5 @@
         });
     </script>
 
+    <a href="{{ path("client_app_cart") }}" class="inline-block mt-4 py-2 px-4 bg-blue-500 text-white rounded-full hover:bg-blue-600 transition-colors duration-300 ease-in-out text-sm">Go to cart screen</a>
 {% endblock %}

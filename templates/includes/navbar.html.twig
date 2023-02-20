@@ -1,0 +1,16 @@
+<nav class="border-b border-gray-100 py-4">
+    <div class="container flex justify-between items-center mx-auto">
+        <a class="flex items-center" href="/">
+            <img src="/images/logo.png" alt="My Website" class="w-19 h-19 rounded-full mr-2">
+        </a>
+        <div class="flex items-center">
+            <button class=" rounded-md ">
+                <img src="{{ '' }}" alt="{{ app.user.firstName }}" class="w-8 h-8 rounded-full mr-2">
+                <span class="sr-only">Profil</span>{{ app.user.firstName }}
+            </button>
+            <a href="#" class="inline-flex items-center justify-center px-4 py-3 text-base font-medium text-white bg-pink-500 rounded-md  ">
+                Mon panier 🏠
+            </a>
+        </div>
+    </div>
+</nav>

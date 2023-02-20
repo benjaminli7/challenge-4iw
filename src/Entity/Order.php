@@ -18,21 +18,20 @@ class Order
     private ?int $id = null;
 
     #[ORM\Column(length: 40)]
-    private ?string $status = null;
+    private ?string $status = "ONGOING";
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?User $client = null;
 
-    #[ORM\ManyToMany(targetEntity: Article::class, inversedBy: 'orders')]
-    private Collection $articles;
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderArticle::class, cascade: ['persist'])]
+    private Collection $orderArticles;
 
     public function __construct()
     {
-        $this->articles = new ArrayCollection();
+        $this->orderArticles = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -45,7 +44,7 @@ class Order
         return $this->status;
     }
 
-    public function setStatus(string $status): self
+    public function setStatus(?string $status): self
     {
         $this->status = $status;
 
@@ -57,7 +56,7 @@ class Order
         return $this->date;
     }
 
-    public function setDate(\DateTimeInterface $date): self
+    public function setDate(?\DateTimeInterface $date): self
     {
         $this->date = $date;
 
@@ -75,28 +74,40 @@ class Order
 
         return $this;
     }
-
-    /**
-     * @return Collection<int, Article>
-     */
-    public function getArticles(): Collection
+    public function getOrderArticles(): Collection
     {
-        return $this->articles;
+        return $this->orderArticles;
     }
 
-    public function addArticle(Article $article): self
+    public function addOrderArticle(OrderArticle $orderArticle): self
     {
-        if (!$this->articles->contains($article)) {
-            $this->articles->add($article);
+        if (!$this->orderArticles->contains($orderArticle)) {
+            $this->orderArticles[] = $orderArticle;
+            $orderArticle->setOrder($this);
         }
 
         return $this;
     }
 
-    public function removeArticle(Article $article): self
+    public function removeOrderArticle(OrderArticle $orderArticle): self
     {
-        $this->articles->removeElement($article);
+        if ($this->orderArticles->contains($orderArticle)) {
+            $this->orderArticles->removeElement($orderArticle);
+            if ($orderArticle->getOrder() === $this) {
+                $orderArticle->setOrder(null);
+            }
+        }
 
         return $this;
     }
+
+    public function addArticle(Article $article, int $quantity): self
+    {
+        $orderArticle = new OrderArticle();
+        $orderArticle->setArticle($article);
+        $orderArticle->setQuantity($quantity);
+        $this->addOrderArticle($orderArticle);
+        return $this;
+    }
+
 }
