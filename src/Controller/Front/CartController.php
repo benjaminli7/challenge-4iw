@@ -13,6 +13,7 @@ use App\Repository\ArticleRepository;
 use App\Repository\OrderRepository;
 use Stripe\Stripe;
 use Stripe\Checkout\Session;
+use App\Service\SmsService;
 
 #[Route('/cart')]
 class CartController extends AbstractController
@@ -114,6 +115,9 @@ class CartController extends AbstractController
         }
 
         $orderRepository->save($order, true);
+
+        //$smsService = new SmsService();
+        //$smsService->sendSms($order);
 
         $request->getSession()->remove('cart');
 
