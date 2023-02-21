@@ -79,6 +79,10 @@ class Order
         return $this->orderArticles;
     }
 
+    public function getOrderPhoneNumber(): ?string
+    {
+        return $this->client->getPhone();
+    }
     public function addOrderArticle(OrderArticle $orderArticle): self
     {
         if (!$this->orderArticles->contains($orderArticle)) {

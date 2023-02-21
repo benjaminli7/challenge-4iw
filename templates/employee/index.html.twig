@@ -8,27 +8,54 @@
         <div class="grid grid-cols-3 gap-4">
             {% for order in orders|sort((a, b) => b.id <=> a.id) %}
                 {% if order.status == 'ONGOING' %}
-                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
-                        <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
-                        {% set total_price = 0 %}
-                        {% for orderArticle in order.orderArticles %}
-                            <div class="mb-2">
-                                <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
-                            </div>
-                            {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
-                        {% endfor %}
-                        <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
-                        <div class="text-sm mb-2">Order Number: {{ order.id }}</div>
-                        <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                        <div>
+                            <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                            {% set total_price = 0 %}
+                            {% for orderArticle in order.orderArticles %}
+                                <div class="mb-2">
+                                    <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                                </div>
+                                {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                            {% endfor %}
+                            <div class="text-lg font-bold mb-4">Total Price: €{{ total_price }}</div>
+                        </div>
+                        <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
+
         <h2 class="font-bold text-lg mb-2">TO PICK UP</h2>
         <div id="to-pick-up" class="grid grid-cols-3 gap-4">
             {% for order in orders %}
-                {% if order.status != 'ONGOING' %}
-                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
+                {% if order.status == 'TO_PICK_UP' %}
+                    <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                        <div>
+                            <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                            {% set total_price = 0 %}
+                            {% for orderArticle in order.orderArticles %}
+                                <div class="mb-2">
+                                    <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                                </div>
+                                {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                            {% endfor %}
+                            <div class="text-lg font-bold mb-4">Total Price: €{{ total_price }}</div>
+                        </div>
+                        {% if order.status == 'TO_PICK_UP' %}
+                            <div class="flex justify-center">
+                                <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                            </div>
+                        {% endif %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </div>
+        <h2 class="font-bold text-lg mb-2">DELIVERED</h2>
+        <div id="delivered" class="grid grid-cols-3 gap-4 delivered">
+            {% for order in orders %}
+                {% if order.status == 'DONE' %}
+                    <div id="delivered-order-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
                         <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                         {% set total_price = 0 %}
                         {% for orderArticle in order.orderArticles %}
@@ -37,15 +64,13 @@
                             </div>
                             {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
                         {% endfor %}
-                        <div class="text-sm mb-2">Total Price: {{ total_price }} €</div>
-                        <div class="text-sm mb-2">Order Number: FR1200{{ order.id }}</div>
-                        {% if order.status == 'TO_PICK_UP' %}
-                            <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
-                        {% endif %}
+                        <div class="text-lg font-bold mb-4">Total Price: €{{ total_price }}</div>
+
                     </div>
                 {% endif %}
             {% endfor %}
         </div>
+
     </div>
 {% endblock %}
 {% block javascripts %}
@@ -62,11 +87,6 @@
             })
                 .then(response => {
                     if (response.ok) {
-                        console.log("response:", response);
-                        // console.log interesting stuff in the response
-
-
-
                         return response.json();
                     } else {
                         throw new Error('Something went wrong');
@@ -75,6 +95,7 @@
                 .then(order => {
 
                     const pickUpButton = document.querySelector(`#ongoing-order-${orderId}`);
+                    const doneButton = document.querySelector(`#to-pick-up-order-${orderId}`);
                     if (pickUpButton) {
                         pickUpButton.innerHTML = 'Terminé';
                         pickUpButton.classList.remove('bg-blue-500');
@@ -90,12 +111,16 @@
                                 toPickUp.appendChild(parent);
                             }
                         }
-                    } else {
-                        const doneButton = document.querySelector(`#to-pick-up-${orderId}`);
-                        console.log(doneButton);
-                        if (doneButton) {
-                            console.log(doneButton);
-                            doneButton.closest(`#to-pick-up-${orderId}`).remove();
+                    } else if (doneButton) {
+                        const delivered = document.querySelector('#delivered');
+                        if (delivered) {
+                            delivered.prepend(doneButton.closest(`div#to-pick-up-${orderId} `));
+                            doneButton.remove();
+
+                            const deliveredCards = delivered.querySelectorAll('#delivered > div');
+                            if (deliveredCards.length > 10) {
+                                deliveredCards[deliveredCards.length - 1].remove();
+                            }
                         }
                     }
                 })
