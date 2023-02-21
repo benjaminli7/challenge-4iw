@@ -28,6 +28,14 @@ services:
             - '../src/DependencyInjection/'
             - '../src/Entity/'
             - '../src/Kernel.php'
+    App\Service\SmsService:
+        arguments:
+            $ssid: '%env(TWILIO_ACCOUNT_SID)%'
+            $token: '%env(TWILIO_AUTH_TOKEN)%'
+            $phone_number: '%env(TWILIO_PHONE_NUMBER)%'
+        autowire: true
+
+
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
