@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Doctrine\ORM\EntityManagerInterface;
-use Twilio\Rest\Client;
 
 class EmployeeController extends AbstractController
 {
@@ -37,11 +36,12 @@ class EmployeeController extends AbstractController
             return $order->getStatus() != 'DONE';
         }));
 
-        $orders = $orderRepository->findBy(['status' => ['ONGOING', 'TO_PICK_UP']]);
-        return $this->render('employee/index.html.twig', [
+        return $this->render('employee/default/index.html.twig', [
             'orders' => $finalOrders,
         ]);
     }
+
+
 
 
 
@@ -71,14 +71,17 @@ class EmployeeController extends AbstractController
         // get order user phone number
         $phoneNumber = $order->getClient()->getPhone();
 
+
         $orderRepository->save($order , true);
 
         if ($order->getStatus() !== $previousStatus) {
+
             $this->smsService->sendSms($order);
         }
 
         return new JsonResponse(['message' => 'Order status updated'], Response::HTTP_OK);
     }
+
     #[Route('/sms', name: 'sms', methods: ['GET'])]
     public function sms(OrderRepository $orderRepository): Void
     {

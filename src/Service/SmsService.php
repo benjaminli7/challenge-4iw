@@ -18,6 +18,7 @@ class SmsService
     public function sendSms(Order $order): void
     {
         $twilioNumber = getenv('TWILIO_PHONE_NUMBER'); // get Twilio number from .env file
+
         $recipientNumber = $order->getOrderPhoneNumber();
         // make it this format +33761598898 actual format is 0761598898
         $recipientNumber = '+33' . substr($recipientNumber, 1);
@@ -39,7 +40,6 @@ class SmsService
                 $messageBody = sprintf('Your order #%d has been updated to %s.', $order->getId(), $status);
                 break;
         }
-
         // Send the SMS message
         $message = $this->client->messages->create(
             $recipientNumber,
@@ -49,6 +49,4 @@ class SmsService
             ]
         );
     }
-
-
 }
