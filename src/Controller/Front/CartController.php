@@ -124,7 +124,6 @@ class CartController extends AbstractController
         $orderRepository->save($order, true);
 
         $this->smsService->sendSms($order);
-
         $request->getSession()->remove('cart');
 
         return $this->render('front/cart/checkout_success.html.twig', [
