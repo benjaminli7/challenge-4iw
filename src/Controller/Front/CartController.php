@@ -18,6 +18,13 @@ use App\Service\SmsService;
 #[Route('/cart')]
 class CartController extends AbstractController
 {
+    private SmsService $smsService;
+
+    public function __construct(SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
+
     #[Route('/', name: 'app_cart')]
     public function index(Request $request, ArticleRepository $articleRepository): Response
     {
@@ -116,8 +123,7 @@ class CartController extends AbstractController
 
         $orderRepository->save($order, true);
 
-        //$smsService = new SmsService();
-        //$smsService->sendSms($order);
+        $this->smsService->sendSms($order);
 
         $request->getSession()->remove('cart');
 

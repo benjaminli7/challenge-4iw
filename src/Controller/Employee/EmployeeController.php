@@ -68,22 +68,23 @@ class EmployeeController extends AbstractController
         $previousStatus = $order->getStatus();
         $order->setStatus($data['status']);
 
-
+        // get order user phone number
+        $phoneNumber = $order->getClient()->getPhone();
 
         $orderRepository->save($order , true);
 
         if ($order->getStatus() !== $previousStatus) {
-            //$this->smsService->sendSms($order);
+            $this->smsService->sendSms($order);
         }
 
         return new JsonResponse(['message' => 'Order status updated'], Response::HTTP_OK);
     }
     #[Route('/sms', name: 'sms', methods: ['GET'])]
-    public function sms(OrderRepository $orderRepository): Response
+    public function sms(OrderRepository $orderRepository): Void
     {
-        $order = $orderRepository->find(6);
+        $order = $orderRepository->find(2);
+        $phoneNumber = $order->getClient()->getPhone();
         $this->smsService->sendSms($order);
-        return $this->render('employee/index.html.twig');
     }
 
 }
