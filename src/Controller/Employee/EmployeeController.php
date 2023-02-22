@@ -9,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
 use Twilio\Rest\Client;
 
 class EmployeeController extends AbstractController
@@ -20,7 +19,6 @@ class EmployeeController extends AbstractController
     public function orders(OrderRepository $orderRepository): Response
     {
         $orders = $orderRepository->findBy(['status' => ['ONGOING', 'TO_PICK_UP']]);
-
         return $this->render('employee/index.html.twig', [
             'orders' => $orders,
         ]);
