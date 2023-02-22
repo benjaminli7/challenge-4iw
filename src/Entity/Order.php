@@ -23,7 +23,8 @@ class Order
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $date = null;
 
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: "client_id", referencedColumnName: "id", nullable: false)]
     private ?User $client = null;
 
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderArticle::class, cascade: ['persist'])]
@@ -68,7 +69,7 @@ class Order
         return $this->client;
     }
 
-    public function setClient(?User $client): self
+    public function setClient(User $client): self
     {
         $this->client = $client;
 
