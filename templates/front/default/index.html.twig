@@ -3,6 +3,29 @@
 {% block title %}B+B{% endblock %}
 
 {% block body %}
+    <button type="button" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" onclick="showModal()">
+        Post Review
+    </button>
+
+
+    <div class="modal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" hidden="hidden">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                    <button type="button" class="close" onclick="hideModal()" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    {{ form_start(form, {'action': path('client_post_review')}) }}                    {{ form_widget(form) }}
+                    <button  class="btn">{{ button_label|default('Post Review') }}</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+        </div>
+    </div>
+
     {% for category in categories %}
         <div class="mb-5">
             <h2 class="text-xl font-bold mb-3">{{ category.name }}</h2>
@@ -21,13 +44,26 @@
                 </div>
                 </li>
                 <button class="add-to-cart" data-article-id="{{ article.id }}">Add to Cart</button>
+
             {% endfor %}
         </ul>
     </div>
     {% endfor %}
 
-    <a href="{{ path("client_app_cart") }}">Go to cart screen <span id="cart-item-count">{{ cart_quantity }}</span></a>
+    <a href="{{ path("client_app_cart") }}">Go to cart screen <span id="cart-item-count">{{ cart_quantity }}</span></a> <br>
+    <br><h1> Reviews </h1>
+    {% for review in reviews %}
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ review.getUser().getFirstname() }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ review.createdAt|date('d/m/Y') }}</h6>
+                <p class="card-text">{{ review.comment }}</p>
+                <p class="card-text">{{ review.note }}</p>
+            </div>
+        </div>
 
+    {% endfor %}
 
 
     <script>
@@ -58,4 +94,16 @@
         });
     </script>
 
+    <script>
+        function showModal() {
+            let modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+        }
+
+        function hideModal() {
+            let modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+    </script>
 {% endblock %}
