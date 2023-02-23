@@ -85,4 +85,13 @@ class Review
     {
         return $this->user;
     }
+
+    public function getUserFullName(): string
+    {
+        return $this->user->getFirstname() . ' ' . $this->user->getLastname();
+    }
+    public function getDateTime(): \DateTime
+    {
+        return $this->createdAt;
+    }
 }

@@ -36,7 +36,7 @@ class EmployeeController extends AbstractController
             return $order->getStatus() != 'DONE';
         }));
 
-        return $this->render('employee/default/index.html.twig', [
+        return $this->render('employee/index.html.twig', [
             'orders' => $finalOrders,
         ]);
     }
