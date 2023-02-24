@@ -24,10 +24,10 @@ class CartController extends AbstractController
         $priceTotal = 0;
 
         $cartArticles = [];
-    
+
         foreach ($cart as $articleId => $quantity) {
             $article = $articleRepository->find($articleId);
-    
+
             if ($article) {
                 $priceTotal += $article->getPrice() * $quantity['quantity'];
                 $cartArticles[] = [
@@ -98,16 +98,19 @@ class CartController extends AbstractController
 
         $user = $this->getUser();
 
-        
+        if (empty($cart)) {
+            return $this->redirectToRoute('client_default_index');
+        }
+
+
         $order = (new Order())
-        ->setStatus('ONGOING')
-        ->setDate(new \DateTime())
-        ->setClient($user)
-        ;
-        
+            ->setStatus('ONGOING')
+            ->setDate(new \DateTime())
+            ->setClient($user);
+
         foreach ($cart as $articleId => $quantity) {
             $article = $articleRepository->find($articleId);
-    
+
             if ($article) {
                 $order->addArticle($article, $quantity['quantity']);
             }
@@ -141,7 +144,7 @@ class CartController extends AbstractController
         return $count;
     }
 
-    
+
     private function getLineItems(array $cart): array
     {
         $lineItems = [];
@@ -162,8 +165,4 @@ class CartController extends AbstractController
 
         return $lineItems;
     }
-
-
-
-    
 }
