@@ -77,6 +77,26 @@
             </a>
         </div>
     </div>
+<<<<<<< HEAD
+=======
+    {% endfor %}
+
+    <a href="{{ path("client_app_cart") }}">Go to cart screen <span id="cart-item-count">{{ cart_quantity }}</span></a> <br>
+    <br><h1> Reviews </h1>
+    {% for review in reviews %}
+        <br>
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ review.getUser().getFirstname() }}</h5>
+                <h6 class="card-subtitle mb-2 text-muted">{{ review.createdAt|date('d/m/Y') }}</h6>
+                <p class="card-text">{{ review.comment }}</p>
+                <p class="card-text">{{ review.note }}</p>
+            </div>
+        </div>
+
+    {% endfor %}
+
+>>>>>>> feature/reviews
 
     <script>
         document.addEventListener('DOMContentLoaded', function() { var
@@ -96,4 +116,20 @@
         response.cartItemCount; cartItemCount.textContent = count; } } };
         xhr.send(); }); }); });
     </script>
+<<<<<<< HEAD
+=======
+
+    <script>
+        function showModal() {
+            let modal = document.getElementById('myModal');
+            modal.style.display = 'block';
+        }
+
+        function hideModal() {
+            let modal = document.getElementById('myModal');
+            modal.style.display = 'none';
+        }
+
+    </script>
+>>>>>>> feature/reviews
 {% endblock %}
