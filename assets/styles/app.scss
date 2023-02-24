@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,6 +8,15 @@
 .btn-security {
     @apply bg-primary-red rounded-3xl py-2 text-white font-bold;
 }
+
+.btn-red {
+    @apply bg-red-600 rounded-3xl px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
+.btn-pink {
+    @apply bg-primary-pink rounded-3xl px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
 .hover {
     @apply hover:opacity-80 transition duration-300 ease-in-out;
 }
@@ -37,7 +47,7 @@
       }
       
       .styled-table thead tr {
-        background-color: #695CFE;
+        @apply bg-primary-pink;
         color: #ffffff;
         text-align: left;
       }
@@ -67,5 +77,9 @@
       
       .styled-table tbody tr.styled-row:hover {
         background-color: rgb(105, 92, 254, 0.1);
+      }
+
+      #table_id_wrapper {
+        margin-top: 30px;
       }
 }

@@ -27,7 +27,6 @@
                     <td>{{ client.roles ? client.roles|json_encode : '' }}</td>
                     <td>{{ client.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
-                        {# <a href="{{ path('admin_app_user_show', {'id': client.id}) }}">Afficher</a> #}
                         {{ include('back/client/_delete_form.html.twig') }}
                     </td>
                 </tr>
