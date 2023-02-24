@@ -4,25 +4,46 @@ namespace App\Controller\Employee;
 
 use App\Entity\Order;
 use App\Repository\OrderRepository;
+use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Twilio\Rest\Client;
+use Doctrine\ORM\EntityManagerInterface;
 
 class EmployeeController extends AbstractController
 {
+    private SmsService $smsService;
 
+    public function __construct(SmsService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
 
     #[Route('/', name: 'default_index', methods: ['GET'])]
     public function orders(OrderRepository $orderRepository): Response
     {
-        $orders = $orderRepository->findBy(['status' => ['ONGOING', 'TO_PICK_UP']]);
-        return $this->render('employee/index.html.twig', [
-            'orders' => $orders,
+        $orders = $orderRepository->findBy(['status' => ['ONGOING', 'TO_PICK_UP' , 'DONE']],['date' => 'DESC']);
+
+        $doneOrders = array_filter($orders, function($order) {
+            return $order->getStatus() == 'DONE';
+        });
+
+        $firstTenDoneOrders = array_slice($doneOrders, 0, 10);
+
+        $finalOrders = array_merge($firstTenDoneOrders, array_filter($orders, function($order) {
+            return $order->getStatus() != 'DONE';
+        }));
+
+        return $this->render('employee/default/index.html.twig', [
+            'orders' => $finalOrders,
         ]);
     }
+
+
+
+
 
     #[Route('/order/{id}/status', name: 'update_order_status', methods: ['POST'])]
     public function updateOrderStatus(Request $request, OrderRepository $orderRepository, int $id): Response
@@ -37,74 +58,36 @@ class EmployeeController extends AbstractController
 
         $data = json_decode($status, true);
         // return $date for test
-         //return new JsonResponse($data, Response::HTTP_OK);
+        //return new JsonResponse($data, Response::HTTP_OK);
 
         if (!in_array($data['status'], ['ONGOING', 'TO_PICK_UP', 'DONE'])) {
             return new JsonResponse(['message' => 'Invalid order status'], Response::HTTP_BAD_REQUEST);
         }
+
+
         $previousStatus = $order->getStatus();
         $order->setStatus($data['status']);
 
-        // Send SMS if order status has changed
+        // get order user phone number
+        $phoneNumber = $order->getClient()->getPhone();
+
 
         $orderRepository->save($order , true);
 
         if ($order->getStatus() !== $previousStatus) {
-            $this->sendSms($order);
+
+            $this->smsService->sendSms($order);
         }
 
         return new JsonResponse(['message' => 'Order status updated'], Response::HTTP_OK);
     }
 
-    #[Route('/test-sms', name: 'test_sms', methods: ['GET'])]
-    public function sendTestSMS()
+    #[Route('/sms', name: 'sms', methods: ['GET'])]
+    public function sms(OrderRepository $orderRepository): Void
     {
-        $accountSid = $this->getParameter('TWILIO_ACCOUNT_SID');
-        $authToken = $this->getParameter('TWILIO_AUTH_TOKEN');
-        $twilioNumber = $this->getParameter('TWILIO_PHONE_NUMBER');
-
-        // The Twilio phone number and the recipient's phone number from your .env file
-
-        // dd($accountSid, $authToken, $twilioNumber);
-
-        // Replace with your own phone number to receive the test SMS
-        $toPhoneNumber = '+33761598898';
-
-        $client = new Client($accountSid, $authToken);
-
-        $message = $client->messages->create(
-            $toPhoneNumber,
-            array(
-                'from' => $twilioNumber,
-                'body' => 'This is a test SMS message from your Twilio account!'
-            )
-        );
-
-        // Log the message SID to verify that the SMS was sent successfully
-        error_log('Twilio SMS SID: ' . $message->sid);
-
-        return new Response('Test SMS sent successfully!');
-    }
-
-    private function sendSms(Order $order): void
-    {
-        $accountSid = $this->getParameter('TWILIO_ACCOUNT_SID');
-        $authToken = $this->getParameter('TWILIO_AUTH_TOKEN');
-        $twilioNumber = $this->getParameter('TWILIO_PHONE_NUMBER');
-        //$recipientNumber = $order->getCustomerPhoneNumber();
-        $recipientNumber = "+33761598898";
-
-        // Create a new Twilio client with your account SID and auth token
-        $client = new Client($accountSid, $authToken);
-
-        // Send the SMS message
-        $message = $client->messages->create(
-            $recipientNumber,
-            [
-                'from' => $twilioNumber,
-                'body' => sprintf('Your order #%d has been updated to %s.', $order->getId(), $order->getStatus()),
-            ]
-        );
+        $order = $orderRepository->find(2);
+        $phoneNumber = $order->getClient()->getPhone();
+        $this->smsService->sendSms($order);
     }
 
 }
