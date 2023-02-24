@@ -11,6 +11,9 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Validator\Constraints\File;
 use Symfony\Component\Validator\Constraints\Image;
+use Symfony\Component\Validator\Constraints\NotBlank;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
+use Symfony\Component\Form\Extension\Core\Type\MoneyType;
 
 
 class ArticleType extends AbstractType
@@ -18,11 +21,29 @@ class ArticleType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
-            ->add('price')
+            ->add('name', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Entrez le nom de l\'article',
+                    ]),
+                ],
+                'label' => 'Nom de l\'article',
+                'required' => true,
+            ])
+            ->add('price', MoneyType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Entrez le prix de l\'article',
+                    ]),
+                ],
+                'label' => 'Prix (en €)',
+                'required' => true,
+                'currency' => '',
+            ])
             ->add('category' , EntityType::class, [
                 'class' => Category::class,
                 'choice_label' => 'name',
+                'label' => 'Catégorie',
             ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Image',

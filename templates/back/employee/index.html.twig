@@ -5,6 +5,9 @@
 {% block body %}
     <h1 class="title-back">Liste des employés</h1>
 
+    <a href="{{ path('admin_app_user_new') }}" class="btn-pink mb-8">Ajouter un employé</a>
+
+
     <table id="table_id" class="styled-table">
         <thead>
             <tr>
@@ -27,8 +30,7 @@
                     <td>{{ employee.roles ? employee.roles|json_encode : '' }}</td>
                     <td>{{ employee.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
-                        <a href="{{ path('admin_app_user_show', {'id': employee.id}) }}">Afficher</a>
-                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}">Editer</a>
+                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}" class="font-bold">Editer</a>
                     </td>
                 </tr>
             {% else %}
@@ -39,7 +41,6 @@
         </tbody>
     </table>
 
-    <a href="{{ path('admin_app_user_new') }}">Create new</a>
 {% endblock %}
 
 {% block javascripts %}
