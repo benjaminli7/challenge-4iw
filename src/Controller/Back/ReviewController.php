@@ -3,7 +3,6 @@
 namespace App\Controller\Back;
 
 use App\Entity\Review;
-use App\Form\ReviewType;
 use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -37,7 +36,6 @@ class ReviewController extends AbstractController
     {
         $data = json_decode($request->getContent(), true);
         $isApproved = $data['isApproved'];
-
         $review->setApproved($isApproved);
         $reviewRepository->save($review, true);
 
@@ -48,14 +46,10 @@ class ReviewController extends AbstractController
     public function deleteReview(Request $request, Review $review, ReviewRepository $reviewRepository): Response
     {
         // isGranted('ROLE_ADMIN')
-
         if ($this->isCsrfTokenValid('delete'.$review->getId(), $request->request->get('_token'))) {
             $reviewRepository->remove($review, true);
         }
 
         return $this->redirectToRoute('admin_app_review_index', [], Response::HTTP_SEE_OTHER);
     }
-
-
-
 }

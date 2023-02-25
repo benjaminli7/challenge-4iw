@@ -1,6 +1,6 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des clients{% endblock %}
+{% block title %}B+B - Liste des clients{% endblock %}
 
 {% block body %}
     <h1 class="title-back">Liste des clients</h1>
@@ -33,6 +33,12 @@
             {% else %}
                 <tr>
                     <td colspan="12">Aucun client trouvé</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             {% endfor %}
         </tbody>
