@@ -1,0 +1,13 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}B+B - Ajout d'un employé{% endblock %}
+
+{% block body %}
+    <h1 class="title-back">Ajouter un employé</h1>
+
+    {{ include('back/employee/_form.html.twig') }}
+
+    <div class="mt-5">
+        <a href="{{ path('admin_app_user_index') }}" class="flex items-center gap-2 font-bold"><i class="fa-solid fa-angle-left"></i>Retourner à la liste des employés</a>
+    </div>
+{% endblock %}

@@ -1,0 +1,63 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}
+    B+B - Panier
+{% endblock %}
+
+{% block body %}
+    <div class="font-ibm p-8">
+        <h1 class="font-bold text-xl text-center mb-8">
+            Récapitulatif de la commande
+        </h1>
+        <div class="flex flex-col gap-6 justify-center items-center">
+        {% if cartArticles is empty %}
+            <div class="border border-gray-200 w-full max-w-sm shadow-lg rounded-3xl p-4 flex justify-center items-center">
+                <div class="flex gap-3 items-center">
+                    <div class="flex flex-col">
+                        <h3>
+                            Votre panier est vide, <a href="{{ path('client_default_index') }}" class="underline">ajoutez des articles !</a>
+                        </h3>
+                    </div>
+                </div>
+            </div>
+        {% else %}
+            {% for cartArticle in cartArticles %}
+                <div class="border border-gray-200 w-full max-w-sm shadow-lg rounded-3xl p-4 flex justify-between items-center">
+                    <div class="flex gap-3 items-center">
+                        {% if cartArticle.article.getImageName() %}
+                            <img class="w-24 h-24 rounded-3xl shadow-lg"
+                                src="{{
+                                asset(
+                                    'uploads/articles/'
+                                        ~ cartArticle.article.getImageName()
+                                )
+                                }}"
+                                alt="{{ cartArticle.article.name }}" />
+                        {% else %}
+                            <img class="w-24 h-24 rounded-3xl shadow-lg"
+                                src="{{ asset('images/placeholder150.png') }}"
+                                alt="{{ cartArticle.article.name }}" />
+                        {% endif %}
+
+                        <div class="flex flex-col">
+                            <h3>
+                                {{ cartArticle.article.name }}
+                            </h3>
+                            <span class="font-bold">
+                                {{ cartArticle.article.price }} €
+                            </span>
+                        </div>
+                    </div>
+                    <span>Qté: {{ cartArticle.quantity }}</span>
+                </div>
+            {% endfor %}
+            <hr class="w-full max-w-sm divide-y divide-gray-400"></hr>
+            <div class="w-full max-w-sm flex justify-between items-center">
+                <span>Total :</span>
+                <span class="font-bold text-2xl">{{ priceTotal }} €</span>
+            </div>
+            <a href="{{ path('client_checkout')}}" class="w-full max-w-sm px-5 py-3 text-center bg-front-red rounded-3xl text-white font-bold">Payer</a>
+        {% endif %}
+        </div>
+    </div>
+{% endblock %}

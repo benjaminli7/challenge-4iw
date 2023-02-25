@@ -6,13 +6,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 
-class DefaultController extends AbstractController
+#[Route('/')]
+class DashboardController extends AbstractController
 {
-    #[Route('/', name: 'default_index')]
+    #[Route('', name: 'default_index')]
     public function index(): Response
     {
-        return $this->render('back/default/index.html.twig', [
-            'controller_name' => 'azertyut',
-        ]);
+        return $this->render('back/dashboard/index.html.twig');
     }
 }

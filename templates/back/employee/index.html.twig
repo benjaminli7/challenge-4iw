@@ -1,10 +1,59 @@
-{% extends 'base_employee.html.twig' %}
+{% extends 'base_back.html.twig' %}
 
-{% block title %}Hello Employee view!{% endblock %}
+{% block title %}B+B - Liste des employés{% endblock %}
 
 {% block body %}
-    <div>
-        <h1>Hello {{ controller_name }}! ✅</h1>
-        <h1>Employee view</h1>
-    </div>
+    <h1 class="title-back">Liste des employés</h1>
+
+    <a href="{{ path('admin_app_user_new') }}" class="btn-pink mb-8">Ajouter un employé</a>
+
+    <table id="table_id" class="styled-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Prénom</th>
+                <th>Nom</th>
+                <th>Email</th>
+                <th>Roles</th>
+                <th>Vérifié</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td>{{ employee.id }}</td>
+                    <td>{{ employee.firstName }}</td>
+                    <td>{{ employee.lastName }}</td>
+                    <td>{{ employee.email }}</td>
+                    <td>{{ employee.roles ? employee.roles|json_encode : '' }}</td>
+                    <td>{{ employee.isVerified ? 'Oui' : 'Non' }}</td>
+                    <td>
+                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}" class="font-bold">Editer</a>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="12">Aucun employé trouvé</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#table_id').DataTable({
+                scrollX: true,
+            });
+        } );
+    </script>
 {% endblock %}

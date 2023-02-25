@@ -1,0 +1,23 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}
+    B+B - Cart
+{% endblock %}
+
+{% block body %}
+    <div class="font-ibm p-8 w-full max-w-sm m-auto flex flex-col gap-6 justify-center items-center">
+        <div class="flex flex-col gap-4 text-center">
+            <i class="fa-solid fa-check text-green-500 text-[64px]"></i>
+            <h1 class="text-green-500 font-bold text-xl">
+                Votre paiement a bien été validé!
+            </h1>
+            <h1 class="text-gray-400">
+                Votre numéro de commande est le {{ orderId }}
+            </h1>
+        </div>
+        <a href="{{ path('client_default_index') }}"
+            class="bg-primary-red text-white px-8 py-3 rounded-3xl hover:opacity-80 transition-opacity duration-250">
+            Retour à l'accueil
+        </a>
+    </div>
+{% endblock %}

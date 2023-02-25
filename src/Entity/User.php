@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampableTrait;
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -34,6 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Assert\Type('string', message: 'Cette valeur doit être une chaine de caractère.')]
     private ?string $lastName = null;
 
+    
     #[ORM\Column(length: 180, unique: true)]
     private ?string $email = null;
 
@@ -55,9 +58,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(nullable: true)]
     private ?string $resetToken = null;
 
-    #[NotBlank]
-    #[Length(min: 6)]
+    #[Length(min: 6, minMessage: 'Votre mot de passe doit faire au moins 6 caractères.')]
     private ?string $plainPassword = null;
+
+    #[ORM\OneToMany(mappedBy: 'client', targetEntity: Order::class)]
+    private Collection $orders;
+
+    #[ORM\Column(length: 16)]
+    private ?string $phone = null;
+
+    public function __construct()
+    {
+        $this->orders = new ArrayCollection();
+    }
 
 
     public function getId(): ?int
@@ -152,7 +165,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getRoles(): array
     {
         $roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
+        // guarantee every user at least has ROLE_CLIENT
         $roles[] = 'ROLE_CLIENT';
 
         return array_unique($roles);
@@ -209,6 +222,48 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Order>
+     */
+    public function getOrders(): Collection
+    {
+        return $this->orders;
+    }
+
+    public function addOrder(Order $order): self
+    {
+        if (!$this->orders->contains($order)) {
+            $this->orders->add($order);
+            $order->setClient($this);
+        }
+
+        return $this;
+    }
+
+    public function removeOrder(Order $order): self
+    {
+        if ($this->orders->removeElement($order)) {
+            // set the owning side to null (unless already changed)
+            if ($order->getClient() === $this) {
+                $order->setClient(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): self
+    {
+        $this->phone = $phone;
+
+        return $this;
     }
 
 }

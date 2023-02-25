@@ -1,0 +1,146 @@
+{% extends 'base_employee.html.twig' %}
+
+{% block body %}
+
+    <div class="font-ibm p-8">
+        <div class="flex flex-col gap-10">
+            <div>
+                <h2 class="font-bold text-lg mb-2">Commandes en cours</h2>
+                <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {% if ordersOngoing is not empty %}
+                        {% for order in ordersOngoing|sort((a, b) => b.id <=> a.id) %}
+                            <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                                <div>
+                                    <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                                    {% set total_price = 0 %}
+                                    {% for orderArticle in order.orderArticles %}
+                                        <div class="mb-2">
+                                            <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                                        </div>
+                                        {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                                    {% endfor %}
+                                    <div class="text-lg font-bold mb-4">Prix total: {{ total_price }} €</div>
+                                </div>
+                                <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h2>Aucune commande en cours</h2>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div>
+                <h2 class="font-bold text-lg mb-2">Commandes à récupérer par le client</h2>
+                <div id="to-pick-up" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                    {% if ordersToPickUp is not empty %}
+                        {% for order in ordersToPickUp|sort((a, b) => b.id <=> a.id) %}
+                            <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                                <div>
+                                    <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                                    {% set total_price = 0 %}
+                                    {% for orderArticle in order.orderArticles %}
+                                        <div class="mb-2">
+                                            <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                                        </div>
+                                        {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                                    {% endfor %}
+                                    <div class="text-lg font-bold mb-4">Prix total: {{ total_price }} €</div>
+                                </div>
+                                {% if order.status == 'TO_PICK_UP' %}
+                                    <div class="flex justify-center">
+                                        <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h2>Aucune commande à récupérer</h2>
+                    {% endif %}
+                </div>
+            </div>
+            <div>
+                <h2 class="font-bold text-lg mb-2">Commandes terminées</h2>
+                <div id="delivered" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 delivered">
+                    {% if ordersDoneLastTen is not empty %}
+                        {% for order in ordersDoneLastTen %}
+                            <div id="delivered-order-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
+                                <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
+                                {% set total_price = 0 %}
+                                {% for orderArticle in order.orderArticles %}
+                                    <div class="mb-2">
+                                        <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                                    </div>
+                                    {% set total_price = total_price + orderArticle.article.price * orderArticle.quantity %}
+                                {% endfor %}
+                                <div class="text-lg font-bold mb-4">Prix total: {{ total_price }} €</div>
+
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <h2>Aucune commande terminée</h2>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
+{% block javascripts %}
+    <script>
+        function updateOrderStatus(orderId, status) {
+            fetch(`/employee/order/${orderId}/status`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    status: status
+                })
+            })
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    } else {
+                        throw new Error('Something went wrong');
+                    }
+                })
+                .then(order => {
+
+                    const pickUpButton = document.querySelector(`#ongoing-order-${orderId}`);
+                    const doneButton = document.querySelector(`#to-pick-up-order-${orderId}`);
+                    if (pickUpButton) {
+                        pickUpButton.innerHTML = 'Terminé';
+                        pickUpButton.classList.remove('bg-blue-500');
+                        pickUpButton.classList.add('bg-green-500');
+                        pickUpButton.setAttribute('onclick', `updateOrderStatus(${orderId}, 'DONE')`);
+                        pickUpButton.id = `to-pick-up-order-${orderId}`;
+
+                        const parent = pickUpButton.closest(`#to-pick-up-${orderId}`);
+                        if (parent) {
+                            const toPickUp = document.querySelector('#to-pick-up');
+                            if (toPickUp) {
+                                parent.id = `to-pick-up-${orderId}`;
+                                toPickUp.appendChild(parent);
+                            }
+                        }
+                    } else if (doneButton) {
+                        const delivered = document.querySelector('#delivered');
+                        if (delivered) {
+                            delivered.prepend(doneButton.closest(`div#to-pick-up-${orderId} `));
+                            doneButton.remove();
+
+                            const deliveredCards = delivered.querySelectorAll('#delivered > div');
+                            if (deliveredCards.length > 10) {
+                                deliveredCards[deliveredCards.length - 1].remove();
+                            }
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error(error);
+                });
+        }
+    </script>
+
+{% endblock %}
