@@ -24,20 +24,14 @@ class EmployeeController extends AbstractController
     #[Route('/', name: 'default_index', methods: ['GET'])]
     public function orders(OrderRepository $orderRepository): Response
     {
-        $orders = $orderRepository->findBy(['status' => ['ONGOING', 'TO_PICK_UP' , 'DONE']],['date' => 'DESC']);
-
-        $doneOrders = array_filter($orders, function($order) {
-            return $order->getStatus() == 'DONE';
-        });
-
-        $firstTenDoneOrders = array_slice($doneOrders, 0, 10);
-
-        $finalOrders = array_merge($firstTenDoneOrders, array_filter($orders, function($order) {
-            return $order->getStatus() != 'DONE';
-        }));
+        $ordersOngoing = $orderRepository->findBy(['status' => 'ONGOING'],['date' => 'DESC']);
+        $ordersToPickUp = $orderRepository->findBy(['status' => 'TO_PICK_UP'], ['date' => 'DESC']);
+        $ordersDoneLastTen = $orderRepository->findBy(['status' => 'DONE'], ['date' => 'DESC'], 10);
 
         return $this->render('employee/index.html.twig', [
-            'orders' => $finalOrders,
+            'ordersOngoing' => $ordersOngoing,
+            'ordersToPickUp' => $ordersToPickUp,
+            'ordersDoneLastTen' => $ordersDoneLastTen,
         ]);
     }
 
@@ -49,7 +43,6 @@ class EmployeeController extends AbstractController
     public function updateOrderStatus(Request $request, OrderRepository $orderRepository, int $id): Response
     {
         $order = $orderRepository->find($id);
-        //js console.log($order);
         if (!$order) {
             throw $this->createNotFoundException('Order not found');
         }
@@ -57,8 +50,6 @@ class EmployeeController extends AbstractController
         $status = $request->getContent();
 
         $data = json_decode($status, true);
-        // return $date for test
-        //return new JsonResponse($data, Response::HTTP_OK);
 
         if (!in_array($data['status'], ['ONGOING', 'TO_PICK_UP', 'DONE'])) {
             return new JsonResponse(['message' => 'Invalid order status'], Response::HTTP_BAD_REQUEST);

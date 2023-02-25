@@ -19,13 +19,13 @@ class DefaultController extends AbstractController
     public function index(Request $request, CategoryRepository $categoryRepository, ReviewRepository $reviewRepository): Response
     {
         $form = $this->createForm(ReviewType::class);
+        $reviews = $reviewRepository->findBy(['approved' => true]);
 
         return $this->render('front/default/index.html.twig',  [
             'categories' => $categoryRepository->findAll(),
             'cart_quantity' => $this->getCartItemCount($request),
             'form' => $form->createView(),
-            // approved reviews true
-            'reviews' => $reviewRepository->findBy(['approved' => true]),
+            'reviews' => $reviews,
         ]);
     }
 
