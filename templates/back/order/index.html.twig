@@ -1,0 +1,58 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}B+B - Commandes{% endblock %}
+
+{% block body %}
+    <h1 class="title-back">Historique des commandes</h1>
+
+    <table id="table_id" class="styled-table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Date</th>
+                <th>Commande</th>
+                <th>Prix total</th>
+                <th>Client</th>
+                <th>Employé</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in ordersDone %}
+                <tr>
+                    <td>{{ order.id }}</td>
+                    <td>{{ order.date|date('Y/m/d H:i:s') }}</td>
+                    <td>
+                        {% for orderArticle in order.orderArticles %}
+                            <div>
+                                <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                            </div>
+                        {% endfor %}
+                    </td>
+                    <td>{{ order.getTotalPrice() }} €</td>
+                    <td>{{ order.getClient().getFirstname() }} {{ order.getClient().getLastname() }}</td>
+                    <td>{{ order.getEmployee().getFirstname() }} {{ order.getEmployee().getLastname() }}</td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="12">Aucune commande trouvée</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+{% endblock %}
+
+{% block javascripts %}
+    <script type="text/javascript">
+        $(document).ready( function () {
+            $('#table_id').DataTable({
+                scrollX: true,
+            });
+        } );
+    </script>
+{% endblock %}

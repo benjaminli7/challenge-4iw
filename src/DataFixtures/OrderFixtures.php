@@ -16,6 +16,7 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
 
         $user1 = $manager->getRepository(User::class)->findOneBy(['email' => '0client@user.fr']);
         $user2 = $manager->getRepository(User::class)->findOneBy(['email' => '1client@user.fr']);
+        $employee1 = $manager->getRepository(User::class)->findOneBy(['email' => 'employee@user.fr']);
 
         $article1 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Coca']);
         $article2 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Fanta']);
@@ -28,7 +29,17 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             ->setClient($user1)
             ->addArticle($article1, 2)
             ->addArticle($article2, 3)
+            ->setEmployee($employee1)
         ;
+
+        $articles = $order1->getOrderArticles()->getValues();
+        $totalPrice = 0;
+
+        foreach ($articles as $article) {
+            $article->getArticle()->setOrderCount($article->getQuantity());
+            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
+        }
+        $order1->setTotalPrice($totalPrice);
 
         $manager->persist($order1);
 
@@ -38,7 +49,18 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
             ->setClient($user2)
             ->addArticle($article3, 1)
             ->addArticle($article4, 2)
+            ->setEmployee($employee1)
         ;
+
+        $articles = $order2->getOrderArticles()->getValues();
+        $totalPrice = 0;
+
+        foreach ($articles as $article) {
+            $article->getArticle()->setOrderCount($article->getQuantity());
+            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
+        }
+        $order2->setTotalPrice($totalPrice);
+
         $manager->persist($order2);
 
         $manager->flush();
