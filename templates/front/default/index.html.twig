@@ -1,7 +1,178 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}Hello DefaultController!{% endblock %}
+{% block title %}
+    B+B
+{% endblock %}
 
 {% block body %}
-    FRONT
+
+    <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600">
+        <div class="flex flex-row justify-center items-center gap-3">
+            {% for category in categories %}
+                <a href="#"
+                    class="text-front-red text-lg mr-4 hover:font-bold transition-[font-weight] duration-250">
+                    {{ category.name }}
+                </a>
+            {% endfor %}
+        </div>
+    </nav>
+
+    <div class="font-ibm p-8 relative flex flex-col gap-8">
+        {% for message in app.flashes('success') %}
+            <div class="bg-success border text-center border-success-border text-black p-3 rounded-lg">{{ message }}</div>
+        {% endfor %}
+        <div class="flex flex-col gap-[80px]">
+            {% for category in categories %}
+                <div class="flex flex-col gap-5">
+                    <h2 class="font-bold text-xl text-center">
+                        {{ category.name }}
+                    </h2>
+                    <div class="md:grid md:grid-cols-3 lg:grid-cols-4 place-items-center flex flex-col gap-16">
+                        {% for article in category.articles %}
+                            <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                <div class="flex flex-col items-center py-10">
+                                    {% if article.getImageName() %}
+                                        <img class="w-24 h-24 object-cover mb-3 rounded-3xl shadow-lg"
+                                            src="{{
+                                            asset(
+                                                'uploads/articles/'
+                                                    ~ article.getImageName()
+                                            )
+                                            }}"
+                                            alt="{{ article.name }}" />
+                                    {% else %}
+                                        <img class="w-24 h-24 mb-3 rounded-3xl shadow-lg"
+                                            src="{{
+                                            asset(
+                                                'images/placeholder150.png'
+                                            )
+                                            }}"
+                                            alt="{{ article.name }}" />
+                                    {% endif %}
+
+                                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                                        {{ article.name }}
+                                    </h5>
+                                    <span class="text-sm text-gray-500 dark:text-gray-400">
+                                        {{ article.price }} €
+                                    </span>
+                                    <div class="flex mt-4 space-x-3 md:mt-6">
+                                        <button class="add-to-cart w-[150px] justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
+                                            data-article-id="{{ article.id }}">
+                                            <i class="text-front-red fa-solid fa-plus">
+
+                                            </i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+
+
+
+        <hr class="h-px my-8 bg-gray-200 border-0 dark:bg-gray-700">
+
+        {% if reviews is not empty %}
+            <div class="relative">
+                    <h1 class="font-bold text-xl text-center mb-8 text-primary-pink">Les avis de nos fidèles clients 👇</h1>
+                    <div class="swiper w-full h-[250px]">
+                        <div class="swiper-wrapper">
+                                {% for review in reviews %}
+                                    <div class="swiper-slide">
+                                        <div href="#" class="flex flex-col items-center justify-center h-full m-auto text-center max-w-sm p-3 bg-white border border-primary-pink rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                                            <h5 class="text-primary-pink mb-2 text-2xl font-bold tracking-tight dark:text-white">{{ review.user.firstname }} {{ review.user.lastname|slice(0,1)}}.</h5>
+                                            <p class="text-primary-pink font-normal dark:text-gray-400">{{ review.note }} / 5</p>
+                                            <p class="text-primary-pink trunc font-normal dark:text-gray-400">{{ review.comment }}</p>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                        </div>
+                    </div>
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+            </div>
+        {% endif %}
+        <div>
+            {{
+                form_start(
+                    form,
+                    {
+                        action: path('client_post_review'),
+                        attr: {
+                            class: 'flex flex-col gap-4'
+                        }
+                    }
+                )
+            }}
+                <h1 class="font-bold text-xl text-primary-pink">Laissez nous votre avis ✍️</h1>
+
+                {% for child in form.children %}
+                    {% if child.vars.name != '_token' %}
+                        <div class="relative">
+                        {{ form_label(child, child.vars.label, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                            {{
+                                form_widget(
+                                    child,
+                                    {
+                                        attr: {
+                                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                                        }
+                                    }
+                                )
+                            }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+                <button class="bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300">{{ button_label|default('Poster') }}</button>
+            {{ form_end(form) }}
+        </div>
+        <div class="sticky bottom-0 right-0 p-4 flex justify-end items-center">
+            <a href="{{ path('client_app_cart') }}">
+                <button class="bg-front-red p-4 rounded-full hover:opacity-50 transition-opacity">
+                    <i class="fa-solid fa-shopping-cart text-white"></i>
+                    <span id="cart-item-count" class="text-white">
+                        {{ cart_quantity }}
+                    </span>
+                </button>
+            </a>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var addToCartButtons = document.querySelectorAll('.add-to-cart');
+
+            addToCartButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var articleId = button.dataset.articleId;
+
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/cart/add-to-cart/' +
+                        articleId);
+                    xhr.setRequestHeader('Content-Type',
+                        'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange =
+                        function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status ===
+                                200) {
+                                var response = JSON.parse(xhr.responseText);
+                                if (response.success) {
+                                    var cartItemCount =
+                                        document.getElementById('cart-item-count');
+                                    var count =
+                                        response.cartItemCount;
+                                    cartItemCount.textContent = count;
+                                }
+                            }
+                        };
+                    xhr.send();
+                });
+            });
+        });
+    </script>
 {% endblock %}

@@ -1,11 +1,13 @@
-<!DOCTYPE html>
+{% extends 'base_back.html.twig' %}
 
-<title>New Article</title>
+{% block title %}B+B - Ajout d'un article{% endblock %}
 
 {% block body %}
-    <h1>Create new Article</h1>
+    <h1 class="title-back">Ajouter un article</h1>
 
     {{ include('back/article/_form.html.twig') }}
 
-    <a href="{{ path('admin_article_index') }}">back to list</a>
+    <div class="mt-5">
+        <a href="{{ path('admin_app_menu') }}" class="flex items-center gap-2 font-bold"><i class="fa-solid fa-angle-left"></i>Retourner au menu</a>
+    </div>
 {% endblock %}

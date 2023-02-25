@@ -1,10 +1,97 @@
+@import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&display=swap');
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-$aqua: #52abab;
+.btn-security {
+    @apply bg-primary-red rounded-3xl py-2 text-white font-bold;
+}
 
-body {
-    // background-color: $aqua;
-    // color: red;
+.btn-red {
+    @apply bg-red-600 rounded-3xl px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
+.btn-pink {
+    @apply bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
+.hover {
+    @apply hover:opacity-80 transition duration-300 ease-in-out;
+}
+.alert-danger {
+    @apply bg-danger border border-danger-border text-white p-3 rounded-3xl text-[14px];
+}
+
+.alert-success {
+    @apply bg-success border border-success-border text-black p-3 rounded-3xl text-[14px];
+}
+
+
+@layer components {
+    .trunc {
+      overflow:hidden;
+      -webkit-box-orient: vertical;
+      display: block;
+      display: -webkit-box;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 4;
+    }
+    .swiper-button-prev, .swiper-button-next {
+      @apply text-primary-pink;
+    }
+    .title-back {
+        @apply text-2xl font-bold mb-10;
+    }
+
+    .test, .dataTables_scroll {
+        padding-top: 15px;
+    }
+    .styled-table {
+        width: 100%!important;
+        border-collapse: collapse;
+        font-size: 0.9em;
+        font-family: sans-serif;
+        min-width: 400px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+      }
+      
+      .styled-table thead tr {
+        @apply bg-primary-pink;
+        color: #ffffff;
+        text-align: left;
+      }
+      
+      .styled-table th,
+      .styled-table td {
+          padding: 12px 15px;
+      }
+      
+      .styled-table tbody tr {
+        border-bottom: 1px solid #dddddd;
+      }
+      
+      .styled-table tbody tr:nth-of-type(even) {
+        background-color: #f3f3f3;
+      }
+      
+      .styled-table tbody tr:last-of-type {
+        border-bottom: 2px solid #695CFE;
+      } 
+      
+      .styled-table tbody tr.styled-row {
+        font-weight: bold;
+        color: #695CFE;
+        cursor: pointer;
+      }
+      
+      .styled-table tbody tr.styled-row:hover {
+        background-color: rgb(105, 92, 254, 0.1);
+      }
+
+      #table_id_wrapper {
+        margin-top: 30px;
+      }
 }

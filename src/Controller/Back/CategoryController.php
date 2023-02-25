@@ -1,10 +1,8 @@
 <?php
-
 namespace App\Controller\Back;
 
 use App\Entity\Category;
 use App\Form\CategoryType;
-use App\Repository\ArticleRepository;
 use App\Repository\CategoryRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,15 +12,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/category')]
 class CategoryController extends AbstractController
 {
-    #[Route('/', name: 'category_index', methods: ['GET'])]
-    public function index(CategoryRepository $categoryRepository): Response
-    {
-        return $this->render('back/category/index.html.twig', [
-            'categories' => $categoryRepository->findAll(),
-        ]);
-    }
-
-
     #[Route('/new', name: 'category_new', methods: ['GET', 'POST'])]
     public function new(Request $request, CategoryRepository $categoryRepository): Response
     {
@@ -33,23 +22,12 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
 
-            return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/new.html.twig', [
             'category' => $category,
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'category_show', methods: ['GET'])]
-    public function show(Category $category, ArticleRepository $articleRepository): Response
-    {
-        $articles = $articleRepository->findByCategory($category);
-
-        return $this->render('back/category/show.html.twig', [
-            'category' => $category,
-            'articles' => $articles,
         ]);
     }
 
@@ -62,7 +40,7 @@ class CategoryController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $categoryRepository->save($category, true);
 
-            return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->renderForm('back/category/edit.html.twig', [
@@ -78,6 +56,6 @@ class CategoryController extends AbstractController
             $categoryRepository->remove($category, true);
         }
 
-        return $this->redirectToRoute('admin_category_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
     }
 }

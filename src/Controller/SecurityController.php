@@ -4,10 +4,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Cassandra\Type\UserType;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bridge\Doctrine\ManagerRegistry;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -46,8 +43,6 @@ class SecurityController extends AbstractController
 
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
-
-            
             try {
                 // $apiInstance->sendTransacEmail($sendSmtpEmail);
                 $token = bin2hex(random_bytes(32));
@@ -55,29 +50,29 @@ class SecurityController extends AbstractController
                 $data = $form->getData();
                 $email = $data->getEmail();
 
-                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
-                $apiInstance = new TransactionalEmailsApi(new Client(),$credentials);
+                $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
+                $apiInstance = new TransactionalEmailsApi(new Client(), $credentials);
 
                 $link = 'https://' . $_SERVER['HTTP_HOST'];
                 $confirm_link = $link . $this->generateUrl('verify_email', ['token' => $token]);
                 $sendSmtpEmail = new SendSmtpEmail([
-                     'subject' => 'Valider votre mail',
-                     'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                     'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                     'to' => [[ 'name' => 'Max Mustermann', 'email' => $email]],
+                    'subject' => 'Valider votre mail',
+                    'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
+                    'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
+                    'to' => [['name' => 'Max Mustermann', 'email' => $email]],
                     //  'htmlContent' => '<html><body><h1>Hello, here is your confirm link {{params.confirm_link}}</h1></body></html>',
-                     'htmlContent' => $this->renderView('emails/verification.html.twig', ['confirm_link' => $confirm_link]),
+                    'htmlContent' => $this->renderView('emails/verification.html.twig', ['confirm_link' => $confirm_link]),
                 ]);
 
                 $apiInstance->sendTransacEmail($sendSmtpEmail);
                 $user->setIsVerified(false);
                 $userRepository->save($user, true);
-
+                $this->addFlash('success', 'Un email de confirmation vous a été envoyé');
             } catch (Exception $e) {
-                echo $e->getMessage(),PHP_EOL;
+                echo $e->getMessage(), PHP_EOL;
             }
 
-            return $this->redirectToRoute('client_default_index');
+            return $this->redirectToRoute('app_login');
         }
 
         return $this->render('security/register.html.twig', [
@@ -89,79 +84,77 @@ class SecurityController extends AbstractController
      * @Route("/verify_email", name="verify_email")
      */
     #[Route(path: '/verify_email', name: 'verify_email', methods: ['GET', 'POST'])]
-    public function verify(Request $request, UserRepository $userRepository) : Response
+    public function verify(Request $request, UserRepository $userRepository): Response
     {
-
         $token = $request->query->get('token');
         $user = $userRepository->findOneBy([
             'token' => $token,
         ]);
 
-        
         if ($user) {
             $user->setIsVerified(true);
             $user->setToken("");
 
             $userRepository->save($user, true);
-
-            return $this->redirectToRoute('verify_success');
+            $this->addFlash('success', 'Vous pouvez maintenant vous connecter!');
+            return $this->redirectToRoute('app_login');
         }
 
-        return $this->render('security/verify_fail.html.twig');
+        $this->addFlash('danger', 'Token invalide');
+        return $this->redirectToRoute('app_login');
     }
-
-    #[Route(path: '/verify_success', name: 'verify_success')]
-    public function verify_success()
-    {
-        return $this->render('security/verify_success.html.twig');
-    }
-
 
     /**
      * @Route("/forgot-password", name="forgot_password")
      */
     #[Route(path: '/forgot-password', name: 'forgot_password')]
-    public function forgot(Request $request, UserRepository $userRepository) : Response
+    public function forgot(Request $request, UserRepository $userRepository): Response
     {
         $form = $this->createForm(\App\Form\ForgotPasswordType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
             $data = $form->getData();
-            $email = $data->getEmail();
+            $email = $data["email"];
             $user = $userRepository->findOneBy([
                 'email' => $email,
             ]);
-            
-            if($user) {
+
+
+            if ($user) {
                 try {
 
+                    $userFirstname = $user->getFirstname();
+                    $userLastname = $user->getLastname();
                     $resetToken = bin2hex(random_bytes(16));
                     $user->setResetToken($resetToken);
                     $userRepository->save($user, true);
                     $resetPasswordLink = $this->generateUrl('reset_password', [
                         'token' => $resetToken,
                     ], UrlGeneratorInterface::ABSOLUTE_URL);
-    
-                    $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', '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');
-                    $apiInstance = new TransactionalEmailsApi(new Client(),$credentials);
-    
+
+                    $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
+                    $apiInstance = new TransactionalEmailsApi(new Client(), $credentials);
+
                     $sendSmtpEmail = new SendSmtpEmail([
-                         'subject' => 'Valider votre mail',
-                         'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                         'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                         'to' => [[ 'name' => 'Max Mustermann', 'email' => $email]],
+                        'subject' => 'Valider votre mail',
+                        'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
+                        'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
+                        'to' => [['name' => "$userFirstname $userLastname", 'email' => $email]],
                         //  'htmlContent' => '<html><body><h1>Hello, here is your confirm link {{params.confirm_link}}</h1></body></html>',
-                         'htmlContent' => $this->renderView('emails/reset_password.html.twig', ['reset_password_link' => $resetPasswordLink]),
+                        'htmlContent' => $this->renderView('emails/reset_password.html.twig', ['reset_password_link' => $resetPasswordLink]),
                     ]);
-    
+
                     $apiInstance->sendTransacEmail($sendSmtpEmail);
 
-                    $this->addFlash('success', 'A reset password link has been sent to your email.');
+                    $this->addFlash('success', 'Un email de réinitialisation de mot de passe vous a été envoyé.');
                     return $this->redirectToRoute('forgot_password');
                 } catch (Exception $e) {
-                    echo $e->getMessage(),PHP_EOL;
+                    echo $e->getMessage(), PHP_EOL;
                 }
+            } else {
+                $this->addFlash('danger', 'Cette adresse email n\'existe pas.');
+                return $this->redirectToRoute('forgot_password');
             }
         }
 
@@ -174,9 +167,13 @@ class SecurityController extends AbstractController
      * @Route("/reset-password", name="reset_password")
      */
     #[Route(path: '/reset-password', name: 'reset_password')]
-    public function reset(Request $request, UserRepository $userRepository) : Response
+    public function reset(Request $request, UserRepository $userRepository): Response
     {
+
         $token = $request->query->get('token');
+        if ($token == null) {
+            return $this->redirectToRoute('app_login');
+        }
         $user = $userRepository->findOneBy([
             'resetToken' => $token,
         ]);
@@ -189,22 +186,39 @@ class SecurityController extends AbstractController
                 $user->setResetToken("");
 
                 $userRepository->save($user, true);
-
-                return $this->redirectToRoute('reset_success');
+                $this->addFlash('success', 'Votre mot de passe a bien été modifié!');
+                return $this->redirectToRoute('app_login');
             }
 
             return $this->render('security/reset_password.html.twig', [
                 'form' => $form->createView()
             ]);
         }
-
-        return $this->render('security/reset_fail.html.twig');
+        return $this->redirectToRoute('app_login');
     }
 
     #[Route(path: '/reset-success', name: 'reset_success')]
     public function reset_success()
     {
         return $this->render('security/reset_success.html.twig');
+    }
+
+
+    #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
+    public function profile(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $form = $this->createForm(\App\Form\UserType::class, $this->getUser());
+
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            $entityManager->flush();
+
+            return $this->redirectToRoute('client_default_index');
+        }
+
+        return $this->render('security/profile.html.twig', [
+            'form' => $form->createView()
+        ]);
     }
 
 
