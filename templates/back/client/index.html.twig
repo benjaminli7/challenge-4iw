@@ -12,6 +12,7 @@
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Email</th>
+                <th>Téléphone</th>
                 <th>Roles</th>
                 <th>Vérifié</th>
                 <th>Actions</th>
@@ -24,6 +25,7 @@
                     <td>{{ client.firstName }}</td>
                     <td>{{ client.lastName }}</td>
                     <td>{{ client.email }}</td>
+                    <td>{{ client.phone }}</td>
                     <td>{{ client.roles ? client.roles|json_encode : '' }}</td>
                     <td>{{ client.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
@@ -33,6 +35,7 @@
             {% else %}
                 <tr>
                     <td colspan="12">Aucun client trouvé</td>
+                    <td></td>
                     <td></td>
                     <td></td>
                     <td></td>
