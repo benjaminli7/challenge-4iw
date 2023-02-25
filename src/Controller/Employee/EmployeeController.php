@@ -2,7 +2,6 @@
 
 namespace App\Controller\Employee;
 
-use App\Entity\Order;
 use App\Repository\OrderRepository;
 use App\Service\SmsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -10,7 +9,6 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Doctrine\ORM\EntityManagerInterface;
 
 class EmployeeController extends AbstractController
 {
@@ -35,10 +33,6 @@ class EmployeeController extends AbstractController
         ]);
     }
 
-
-
-
-
     #[Route('/order/{id}/status', name: 'update_order_status', methods: ['POST'])]
     public function updateOrderStatus(Request $request, OrderRepository $orderRepository, int $id): Response
     {
@@ -54,7 +48,6 @@ class EmployeeController extends AbstractController
         if (!in_array($data['status'], ['ONGOING', 'TO_PICK_UP', 'DONE'])) {
             return new JsonResponse(['message' => 'Invalid order status'], Response::HTTP_BAD_REQUEST);
         }
-
 
         $previousStatus = $order->getStatus();
         $order->setStatus($data['status']);
@@ -80,5 +73,4 @@ class EmployeeController extends AbstractController
         $phoneNumber = $order->getClient()->getPhone();
         $this->smsService->sendSms($order);
     }
-
 }

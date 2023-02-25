@@ -1,5 +1,4 @@
 <?php
-
 namespace App\Controller\Back;
 
 use App\Entity\Article;
@@ -12,29 +11,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
 
-
-
 #[Route('/article')]
 class ArticleController extends AbstractController
 {
-    #[Route('/', name: 'article_index', methods: ['GET'])]
-    public function index(ArticleRepository $articleRepository): Response
-    {
-         $test = $articleRepository->findAll();
-
-        return $this->render('back/article/index.html.twig', [
-            'articles' => $articleRepository->findAll(),
-        ]);
-    }
-
     #[Route('/new', name: 'article_new', methods: ['GET', 'POST'])]
     public function new(Request $request, ArticleRepository $articleRepository, SluggerInterface $slugger): Response
     {
         $article = new Article();
-        // only keep fields price and name
 
         $form = $this->createForm(ArticleType::class, $article);
-        //remove created_at and updated_at fields
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -64,14 +49,6 @@ class ArticleController extends AbstractController
         return $this->renderForm('back/article/new.html.twig', [
             'article' => $article,
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'article_show', methods: ['GET'])]
-    public function show(Article $article): Response
-    {
-        return $this->render('back/article/show.html.twig', [
-            'article' => $article,
         ]);
     }
 

@@ -43,14 +43,6 @@ class EmployeeController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
-    public function show(User $employee): Response
-    {
-        return $this->render('back/employee/show.html.twig', [
-            'user' => $employee,
-        ]);
-    }
-
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $employee, UserRepository $userRepository): Response
     {

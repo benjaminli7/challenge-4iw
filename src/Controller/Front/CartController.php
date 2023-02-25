@@ -143,13 +143,10 @@ class CartController extends AbstractController
     private function getCartItemCount(Request $request): int
     {
         $cart = $request->getSession()->get('cart', []);
-
         $count = 0;
-
         foreach ($cart as $cartItemData) {
             $count += $cartItemData['quantity'];
         }
-
         return $count;
     }
 
