@@ -1,40 +1,62 @@
 {% extends 'base_back.html.twig' %}
 
-{% block body %}
-    <h1>Reviews</h1>
+{% block title %}Liste des avis{% endblock %}
 
-    <table>
+{% block body %}
+    <h1 class="title-back">Liste des avis</h1>
+
+    <table id="table_reviews" class="styled-table">
         <thead>
-        <tr>
-            <th>Id</th>
-            <th>Reviewer Name</th>
-            <th>Comment</th>
-            <th>Approved</th>
-            <th>Date</th>
-            <th>Rate</th>
-            <th>Delete</th>
-        </tr>
+            <tr>
+                <th>Id</th>
+                <th>Client</th>
+                <th>Avis</th>
+                <th>Approved</th>
+                <th>Date</th>
+                <th>Note</th>
+                <th>Actions</th>
+            </tr>
         </thead>
         <tbody>
-        {% for review in reviews %}
-            <tr>
-                <td>{{ review.id }}</td>
-                <td>{{ review.getUserFullName() }}</td>
-                <td>{{ review.comment }}</td>
-                <td>
-                    <input type="checkbox" class="review-approval" data-review-id="{{ review.id }}" {% if review.isApproved %}checked{% endif %}>
-                </td>
-                <td>{{ review.getDateTime() ? review.getDateTime()|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ review.note }} </td>
-                <td>
-                    {{ include('back/review/_delete_form.html.twig') }}
-                </td>
-            </tr>
-        {% endfor %}
+            {% for review in reviews %}
+                <tr>
+                    <td>{{ review.id }}</td>
+                    <td>{{ review.getUserFullName() }}</td>
+                    <td>{{ review.comment }}</td>
+                    <td>
+                        <input type="checkbox" class="review-approval" data-review-id="{{ review.id }}" {% if review.isApproved %}checked{% endif %}>
+                    </td>
+                    <td>{{ review.getDateTime() ? review.getDateTime()|date('Y/m/d H:i:s') : '' }}</td>
+                    <td>{{ review.note }} </td>
+                    <td>
+                        {{ include('back/review/_delete_form.html.twig') }}
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">Aucun avis pour le moment</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            {% endfor %}
         </tbody>
     </table>
 
-    <script>
+
+
+{% endblock %}
+
+{% block javascripts %}
+<script type="text/javascript">
+    $(document).ready( function () {
+        $('#table_reviews').DataTable({
+            scrollX: true,
+        });
+
         const approvalCheckboxes = document.querySelectorAll('.review-approval');
         approvalCheckboxes.forEach(checkbox => {
             checkbox.addEventListener('change', function() {
@@ -51,5 +73,6 @@
                 })
             });
         });
-    </script>
+    } );
+</script>
 {% endblock %}
