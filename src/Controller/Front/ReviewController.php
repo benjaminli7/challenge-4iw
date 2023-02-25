@@ -4,7 +4,6 @@ namespace App\Controller\Front;
 
 use App\Entity\Review;
 use App\Form\ReviewType;
-use App\Repository\CategoryRepository;
 use App\Repository\ReviewRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -25,15 +24,12 @@ class ReviewController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $reviewRepository->save($review, true);
-            $this->addFlash('success', 'Your review has been posted successfully.');
 
+            $this->addFlash('success', 'Merci pour votre avis, il sera publié après validation par le propriétaire 😊');
             return $this->redirectToRoute('client_default_index');
         }
 
-        return $this->render('front/review/review_modal.html.twig', [
-            'form' => $form->createView(),
-        ]);
-
+        return $this->redirectToRoute('client_default_index');
     }
 }
 
