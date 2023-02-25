@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230225033747 extends AbstractMigration
+final class Version20230225181946 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -23,7 +23,7 @@ final class Version20230225033747 extends AbstractMigration
         $this->addSql('CREATE TABLE "article" (id INT NOT NULL, category_id INT NOT NULL, name VARCHAR(50) NOT NULL, price DOUBLE PRECISION NOT NULL, order_count INT NOT NULL, image_name VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_23A0E6612469DE2 ON "article" (category_id)');
         $this->addSql('CREATE TABLE category (id INT NOT NULL, name VARCHAR(100) NOT NULL, PRIMARY KEY(id))');
-        $this->addSql('CREATE TABLE "order" (id INT NOT NULL, client_id INT NOT NULL, employee_id INT NOT NULL, status VARCHAR(40) NOT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, total_price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE "order" (id INT NOT NULL, client_id INT NOT NULL, employee_id INT DEFAULT NULL, status VARCHAR(40) NOT NULL, date TIMESTAMP(0) WITHOUT TIME ZONE NOT NULL, total_price DOUBLE PRECISION NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_F529939819EB6921 ON "order" (client_id)');
         $this->addSql('CREATE INDEX IDX_F52993988C03F15C ON "order" (employee_id)');
         $this->addSql('CREATE TABLE order_article (id INT NOT NULL, order_id INT NOT NULL, article_id INT NOT NULL, quantity INT NOT NULL, PRIMARY KEY(id))');
