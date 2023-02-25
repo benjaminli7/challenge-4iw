@@ -24,6 +24,12 @@ class ArticleType extends AbstractType
                 'class' => Category::class,
                 'choice_label' => 'name',
             ])
+            ->add('tags', EntityType::class, [
+                'class' => 'App\Entity\Tag',
+                'choice_label' => 'name',
+                'multiple' => true,
+                'expanded' => true,
+            ])
             ->add('imageFile', FileType::class, [
                 'label' => 'Image',
                 'mapped' => false,

@@ -34,6 +34,9 @@ class Article
     #[Assert\Type('float', message: 'Cette valeur doit être un nombre ou un chiffre.')]
     private ?float $price = null;
 
+    #[ORM\ManyToMany(targetEntity: Tag::class, inversedBy: "articles")]
+    #[ORM\JoinTable(name: "article_tag")]
+    private Collection $tags;
 
     #[ORM\Column]
     private ?int $orderCount = 0;
@@ -51,8 +54,36 @@ class Article
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->tags = new ArrayCollection();
     }
 
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
+    }
+
+    public function addTag(Tag $tag): self
+    {
+        if (!$this->tags->contains($tag)) {
+            $this->tags->add($tag);
+            $tag->addArticle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTag(Tag $tag): self
+    {
+        if ($this->tags->removeElement($tag)) {
+            $tag->removeArticle($this);
+        }
+
+        return $this;
+    }
+    
     public function getId(): ?int
     {
         return $this->id;

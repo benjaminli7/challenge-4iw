@@ -40,7 +40,9 @@ class ArticleController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
 
             $file = $form->get('imageFile')->getData();
-
+            foreach ($article->getTags() as $tag) {
+                $article->addTag($tag);
+            }   
             if($file){
                 $fileName = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
                 $safeFileName = $slugger->slug($fileName);
