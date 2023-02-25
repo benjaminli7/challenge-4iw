@@ -52,6 +52,10 @@ class EmployeeController extends AbstractController
         $previousStatus = $order->getStatus();
         $order->setStatus($data['status']);
 
+        if($data['status'] === 'DONE'){
+            $order->setEmployee($this->getUser());
+        }
+
         // get order user phone number
         $phoneNumber = $order->getClient()->getPhone();
 

@@ -124,6 +124,18 @@ class CartController extends AbstractController
             }
         }
 
+        $articles = $order->getOrderArticles()->getValues();
+        $totalPrice = 0;
+
+        foreach($articles as $article) {
+            
+            $article->getArticle()->setOrderCount($article->getQuantity());
+            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
+        }
+
+        $order->setTotalPrice($totalPrice);
+
+
         $orderRepository->save($order, true);
 
         $this->smsService->sendSms($order);
