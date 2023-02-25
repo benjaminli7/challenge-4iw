@@ -6,9 +6,9 @@ const swiper = new Swiper(".swiper", {
     // Optional parameters
     direction: "horizontal",
     speed: 400,
-    loop: false,
     slidesPerView: 1,
     spaceBetween: 30,
+    centeredSlides: true,
 
     breakpoints: {
         768: {

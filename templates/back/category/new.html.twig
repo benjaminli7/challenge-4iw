@@ -1,11 +1,13 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Nouvelle categorie{% endblock %}
+{% block title %}B&B - Ajout d'une catégorie{% endblock %}
 
 {% block body %}
-    <h1>Create new Category</h1>
+    <h1 class="title-back">Ajouter une catégorie</h1>
 
     {{ include('back/category/_form.html.twig') }}
 
-    <a href="{{ path('admin_category_index') }}">back to list</a>
+    <div class="mt-5">
+        <a href="{{ path('admin_app_menu') }}" class="flex items-center gap-2 font-bold"><i class="fa-solid fa-angle-left"></i>Retourner au menu</a>
+    </div>
 {% endblock %}

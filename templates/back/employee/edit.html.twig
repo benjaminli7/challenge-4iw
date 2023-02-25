@@ -4,15 +4,8 @@
 
 {% block body %}
     <h1 class="title-back">Edition de l'employé {{ user.firstname }} {{ user.lastname }}</h1>
-
     {{ include('back/employee/_form.html.twig', {'button_label': 'Mettre à jour'}) }}
-
-
-    <div class="cursor-pointer flex justify-center mt-3 bg-primary-red rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;">
     {{ include('back/employee/_delete_form.html.twig') }}
-    </div>
-
-
     <div class="mt-5">
         <a href="{{ path('admin_app_user_index') }}" class="flex items-center gap-2 font-bold"><i class="fa-solid fa-angle-left"></i>Retourner à la liste des employés</a>
     </div>
