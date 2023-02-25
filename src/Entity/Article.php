@@ -101,7 +101,7 @@ class Article
 
     public function setOrderCount(int $orderCount): self
     {
-        $this->orderCount = $orderCount;
+        $this->orderCount += $orderCount;
 
         return $this;
     }

@@ -30,6 +30,13 @@ class Order
     #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderArticle::class, cascade: ['persist'])]
     private Collection $orderArticles;
 
+    #[ORM\Column]
+    private ?float $total_price = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?User $employee = null;
+
     public function __construct()
     {
         $this->orderArticles = new ArrayCollection();
@@ -112,6 +119,30 @@ class Order
         $orderArticle->setArticle($article);
         $orderArticle->setQuantity($quantity);
         $this->addOrderArticle($orderArticle);
+        return $this;
+    }
+
+    public function getTotalPrice(): ?float
+    {
+        return $this->total_price;
+    }
+
+    public function setTotalPrice(float $total_price): self
+    {
+        $this->total_price = $total_price;
+
+        return $this;
+    }
+
+    public function getEmployee(): ?User
+    {
+        return $this->employee;
+    }
+
+    public function setEmployee(?User $employee): self
+    {
+        $this->employee = $employee;
+
         return $this;
     }
 

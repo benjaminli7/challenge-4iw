@@ -13,7 +13,7 @@ module.exports = {
             "primary-gray": "#F5F5F5",
             "front-red": "#CC0000",
             "primary-pink": "#D24E8A",
-            danger: "##F8D7DA",
+            danger: "#F8D7DA",
             "danger-border": "#F5C6CB",
             success: "#d4edda",
             "success-border": "#C3E6CB",
