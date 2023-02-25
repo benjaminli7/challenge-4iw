@@ -43,6 +43,11 @@
             <th>Image</th>
             <td><img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" style="width: 150px; height: 150px"></td>
         </tr>
+        <tr>
+        <th>Tags</th>
+        <td>{% for tag in article.tags %}
+            {{ tag.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}</td>
         </tbody>
     </table>
 
