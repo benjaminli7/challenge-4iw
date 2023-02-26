@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Controller;
+namespace App\Controller\Back;
 
 use App\Entity\Tag;
 use App\Form\TagType;
@@ -13,14 +13,6 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/tag')]
 class TagController extends AbstractController
 {
-    #[Route('/', name: 'app_tag_index', methods: ['GET'])]
-    public function index(TagRepository $tagRepository): Response
-    {
-        return $this->render('tag/index.html.twig', [
-            'tags' => $tagRepository->findAll(),
-        ]);
-    }
-
     #[Route('/new', name: 'app_tag_new', methods: ['GET', 'POST'])]
     public function new(Request $request, TagRepository $tagRepository): Response
     {
@@ -31,20 +23,12 @@ class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tagRepository->save($tag, true);
 
-            return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('tag/new.html.twig', [
+        return $this->renderForm('back/tag/new.html.twig', [
             'tag' => $tag,
             'form' => $form,
-        ]);
-    }
-
-    #[Route('/{id}', name: 'app_tag_show', methods: ['GET'])]
-    public function show(Tag $tag): Response
-    {
-        return $this->render('tag/show.html.twig', [
-            'tag' => $tag,
         ]);
     }
 
@@ -57,10 +41,10 @@ class TagController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $tagRepository->save($tag, true);
 
-            return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->renderForm('tag/edit.html.twig', [
+        return $this->renderForm('back/tag/edit.html.twig', [
             'tag' => $tag,
             'form' => $form,
         ]);
@@ -69,10 +53,10 @@ class TagController extends AbstractController
     #[Route('/{id}', name: 'app_tag_delete', methods: ['POST'])]
     public function delete(Request $request, Tag $tag, TagRepository $tagRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$tag->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $tag->getId(), $request->request->get('_token'))) {
             $tagRepository->remove($tag, true);
         }
 
-        return $this->redirectToRoute('app_tag_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
     }
 }
