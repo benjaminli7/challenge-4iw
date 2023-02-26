@@ -1,0 +1,23 @@
+{% block title %}Liste des employés{% endblock %}
+
+{% block content %}
+    <h1 style="text-align: center; margin-bottom: 2rem;">Liste des employés</h1>
+
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+        <thead>
+            <tr>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Nom</th>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Email</th>
+
+            </tr>
+        </thead>
+        <tbody>
+            {% for employee in employees %}
+                <tr>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">{{ employee.firstname }} {{ employee.lastname }}</td>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">{{ employee.email }}</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
