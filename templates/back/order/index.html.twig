@@ -44,6 +44,12 @@
             {% endfor %}
         </tbody>
     </table>
+    <form method="post" action="{{ path('app_pdf_generate_orders') }}">
+    <button type="submit" class="btn btn-outline-primary btn-lg">
+        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
+        Générer PDF
+    </button>
+</form>
 
 {% endblock %}
 
