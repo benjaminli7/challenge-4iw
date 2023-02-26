@@ -47,8 +47,10 @@ class SecurityController extends AbstractController
                 // $apiInstance->sendTransacEmail($sendSmtpEmail);
                 $token = bin2hex(random_bytes(32));
                 $user->setToken($token);
-                $data = $form->getData();
-                $email = $data->getEmail();
+                $user = $form->getData();
+                $email = $user->getEmail();
+                $firstName = $user->getFirstname();
+                $lastName = $user->getLastname();
 
                 $credentials = Configuration::getDefaultConfiguration()->setApiKey('api-key', $this->getParameter('SENDINBLUE_SECRET'));
                 $apiInstance = new TransactionalEmailsApi(new Client(), $credentials);
@@ -56,12 +58,12 @@ class SecurityController extends AbstractController
                 $link = 'https://' . $_SERVER['HTTP_HOST'];
                 $confirm_link = $link . $this->generateUrl('verify_email', ['token' => $token]);
                 $sendSmtpEmail = new SendSmtpEmail([
-                    'subject' => 'Valider votre mail',
-                    'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                    'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                    'to' => [['name' => 'Max Mustermann', 'email' => $email]],
+                    'subject' => 'B+B - Valider votre mail',
+                    'sender' => ['name' => 'B+B', 'email' => 'contact@sendinblue.com'],
+                    'replyTo' => ['name' => 'B+B', 'email' => 'contact@sendinblue.com'],
+                    'to' => [['name' => "$firstName $lastName", 'email' => $email]],
                     //  'htmlContent' => '<html><body><h1>Hello, here is your confirm link {{params.confirm_link}}</h1></body></html>',
-                    'htmlContent' => $this->renderView('emails/verification.html.twig', ['confirm_link' => $confirm_link]),
+                    'htmlContent' => $this->renderView('emails/verification.html.twig', ['confirm_link' => $confirm_link, 'firstName' => $firstName, 'lastName' => $lastName]),
                 ]);
 
                 $apiInstance->sendTransacEmail($sendSmtpEmail);
@@ -120,12 +122,10 @@ class SecurityController extends AbstractController
                 'email' => $email,
             ]);
 
-
             if ($user) {
                 try {
-
-                    $userFirstname = $user->getFirstname();
-                    $userLastname = $user->getLastname();
+                    $firstName = $user->getFirstname();
+                    $lastName = $user->getLastname();
                     $resetToken = bin2hex(random_bytes(16));
                     $user->setResetToken($resetToken);
                     $userRepository->save($user, true);
@@ -137,12 +137,12 @@ class SecurityController extends AbstractController
                     $apiInstance = new TransactionalEmailsApi(new Client(), $credentials);
 
                     $sendSmtpEmail = new SendSmtpEmail([
-                        'subject' => 'Valider votre mail',
-                        'sender' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                        'replyTo' => ['name' => 'Sendinblue', 'email' => 'contact@sendinblue.com'],
-                        'to' => [['name' => "$userFirstname $userLastname", 'email' => $email]],
+                        'subject' => 'B+B - Réinitialisation de mot de passe',
+                        'sender' => ['name' => 'B+B', 'email' => 'contact@sendinblue.com'],
+                        'replyTo' => ['name' => 'B+B', 'email' => 'contact@sendinblue.com'],
+                        'to' => [['name' => "$firstName $lastName", 'email' => $email]],
                         //  'htmlContent' => '<html><body><h1>Hello, here is your confirm link {{params.confirm_link}}</h1></body></html>',
-                        'htmlContent' => $this->renderView('emails/reset_password.html.twig', ['reset_password_link' => $resetPasswordLink]),
+                        'htmlContent' => $this->renderView('emails/reset_password.html.twig', ['reset_password_link' => $resetPasswordLink,'firstName' => $firstName, 'lastName' => $lastName]),
                     ]);
 
                     $apiInstance->sendTransacEmail($sendSmtpEmail);
@@ -196,13 +196,6 @@ class SecurityController extends AbstractController
         }
         return $this->redirectToRoute('app_login');
     }
-
-    #[Route(path: '/reset-success', name: 'reset_success')]
-    public function reset_success()
-    {
-        return $this->render('security/reset_success.html.twig');
-    }
-
 
     #[Route('/profile', name: 'profile', methods: ['GET', 'POST'])]
     public function profile(Request $request, EntityManagerInterface $entityManager): Response
