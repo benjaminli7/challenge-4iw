@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\PdfRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Entity(repositoryClass: PdfRepository::class)]
 class Pdf

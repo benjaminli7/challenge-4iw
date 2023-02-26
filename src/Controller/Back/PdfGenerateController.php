@@ -36,7 +36,7 @@ class PdfGenerateController extends AbstractController
     #[Route('/pdf/generate/employees', name: 'app_pdf_generate_employees')]
     public function generateEmployeesPdf(UserRepository $userRepository): Response
     {
-        $employees = $userRepository->findByRole('ROLE_EMPLOYEE');
+        $employees = $userRepository->findUsersByRole('ROLE_EMPLOYEE');
 
         $html = $this->renderView('back/pdf_generate/employees.html.twig', [
             'employees' => $employees,
