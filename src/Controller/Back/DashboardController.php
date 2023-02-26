@@ -20,7 +20,7 @@ class DashboardController extends AbstractController
         // boucler sur les commandes pour calculer les ventes par mois
         foreach ($orders as $order) {
             $month = $order->getDate()->format('M Y'); // format "Jan 2022", par exemple
-            $amount = $order->getTotalAmount();
+            $amount = $order->getTotalPrice();
 
             if (isset($salesByMonth[$month])) {
                 $salesByMonth[$month] += $amount;

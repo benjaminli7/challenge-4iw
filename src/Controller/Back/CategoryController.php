@@ -49,13 +49,20 @@ class CategoryController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'category_delete', methods: ['POST'])]
-    public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response
-    {
+    #[Route('/category/{id}', name: 'category_delete', methods: ['POST'])]
+    public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
-            $categoryRepository->remove($category, true);
+            try {
+                $categoryRepository->remove($category, true);
+                $this->addFlash('success', 'Category has been deleted successfully.');
+            } catch (\Exception $e) {
+                $this->addFlash('error', $e->getMessage());
+            }
+        } else {
+            $this->addFlash('error', 'Invalid CSRF token.');
         }
 
         return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
     }
+
 }
