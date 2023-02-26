@@ -1,6 +1,6 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des clients{% endblock %}
+{% block title %}B+B - Liste des clients{% endblock %}
 
 {% block body %}
     <h1 class="title-back">Liste des clients</h1>
@@ -12,6 +12,7 @@
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Email</th>
+                <th>Téléphone</th>
                 <th>Roles</th>
                 <th>Vérifié</th>
                 <th>Actions</th>
@@ -24,16 +25,23 @@
                     <td>{{ client.firstName }}</td>
                     <td>{{ client.lastName }}</td>
                     <td>{{ client.email }}</td>
+                    <td>{{ client.phone }}</td>
                     <td>{{ client.roles ? client.roles|json_encode : '' }}</td>
                     <td>{{ client.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
-                        {# <a href="{{ path('admin_app_user_show', {'id': client.id}) }}">Afficher</a> #}
                         {{ include('back/client/_delete_form.html.twig') }}
                     </td>
                 </tr>
             {% else %}
                 <tr>
                     <td colspan="12">Aucun client trouvé</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             {% endfor %}
         </tbody>

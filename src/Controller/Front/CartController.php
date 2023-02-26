@@ -32,10 +32,10 @@ class CartController extends AbstractController
         $priceTotal = 0;
 
         $cartArticles = [];
-    
+
         foreach ($cart as $articleId => $quantity) {
             $article = $articleRepository->find($articleId);
-    
+
             if ($article) {
                 $priceTotal += $article->getPrice() * $quantity['quantity'];
                 $cartArticles[] = [
@@ -106,25 +106,39 @@ class CartController extends AbstractController
 
         $user = $this->getUser();
 
-        
+        if (empty($cart)) {
+            return $this->redirectToRoute('client_default_index');
+        }
+
+
         $order = (new Order())
-        ->setStatus('ONGOING')
-        ->setDate(new \DateTime())
-        ->setClient($user)
-        ;
-        
+            ->setStatus('ONGOING')
+            ->setDate(new \DateTime())
+            ->setClient($user);
+
         foreach ($cart as $articleId => $quantity) {
             $article = $articleRepository->find($articleId);
-    
+
             if ($article) {
                 $order->addArticle($article, $quantity['quantity']);
             }
         }
 
+        $articles = $order->getOrderArticles()->getValues();
+        $totalPrice = 0;
+
+        foreach($articles as $article) {
+            
+            $article->getArticle()->setOrderCount($article->getQuantity());
+            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
+        }
+
+        $order->setTotalPrice($totalPrice);
+
+
         $orderRepository->save($order, true);
 
         $this->smsService->sendSms($order);
-
         $request->getSession()->remove('cart');
 
         return $this->render('front/cart/checkout_success.html.twig', [
@@ -141,17 +155,14 @@ class CartController extends AbstractController
     private function getCartItemCount(Request $request): int
     {
         $cart = $request->getSession()->get('cart', []);
-
         $count = 0;
-
         foreach ($cart as $cartItemData) {
             $count += $cartItemData['quantity'];
         }
-
         return $count;
     }
 
-    
+
     private function getLineItems(array $cart): array
     {
         $lineItems = [];
@@ -172,8 +183,4 @@ class CartController extends AbstractController
 
         return $lineItems;
     }
-
-
-
-    
 }

@@ -1,9 +1,11 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Liste des employés{% endblock %}
+{% block title %}B+B - Liste des employés{% endblock %}
 
 {% block body %}
     <h1 class="title-back">Liste des employés</h1>
+
+    <a href="{{ path('admin_app_user_new') }}" class="btn-pink mb-8">Ajouter un employé</a>
 
     <table id="table_id" class="styled-table">
         <thead>
@@ -12,6 +14,7 @@
                 <th>Prénom</th>
                 <th>Nom</th>
                 <th>Email</th>
+                <th>Téléphone</th>
                 <th>Roles</th>
                 <th>Vérifié</th>
                 <th>Actions</th>
@@ -24,22 +27,28 @@
                     <td>{{ employee.firstName }}</td>
                     <td>{{ employee.lastName }}</td>
                     <td>{{ employee.email }}</td>
+                    <td>{{ employee.phone }}</td>
                     <td>{{ employee.roles ? employee.roles|json_encode : '' }}</td>
                     <td>{{ employee.isVerified ? 'Oui' : 'Non' }}</td>
                     <td>
-                        <a href="{{ path('admin_app_user_show', {'id': employee.id}) }}">Afficher</a>
-                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}">Editer</a>
+                        <a href="{{ path('admin_app_user_edit', {'id': employee.id}) }}" class="font-bold">Editer</a>
                     </td>
                 </tr>
             {% else %}
                 <tr>
                     <td colspan="12">Aucun employé trouvé</td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
                 </tr>
             {% endfor %}
         </tbody>
     </table>
 
-    <a href="{{ path('admin_app_user_new') }}">Create new</a>
 {% endblock %}
 
 {% block javascripts %}
