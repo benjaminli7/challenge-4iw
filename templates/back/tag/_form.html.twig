@@ -1,0 +1,36 @@
+{{ form_start(form, {'attr': {'class': 'flex flex-col gap-6'}}) }}
+{# {{ form_widget(form) }} #}
+
+{% for child in form.children %}
+    {% if child.vars.name != '_token' %}
+        <div class="relative">
+            {{ form_label(child, child.vars.label, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+            {% if child.vars.name == "color" %}
+                {{
+                    form_widget(
+                        child,
+                        {
+                            attr: {
+                                class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block p-1'
+                            }
+                        }
+                    )
+                }}
+            {% else %}
+                {{
+                    form_widget(
+                        child,
+                        {
+                            attr: {
+                                class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                            }
+                        }
+                    )
+                }}
+            {% endif %}
+        </div>
+    {% endif %}
+{% endfor %}
+
+<button class="bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300">{{ button_label|default('Enregistrer') }}</button>
+{{ form_end(form) }}

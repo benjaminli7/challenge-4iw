@@ -36,36 +36,34 @@ class EmployeeController extends AbstractController
     #[Route('/order/{id}/status', name: 'update_order_status', methods: ['POST'])]
     public function updateOrderStatus(Request $request, OrderRepository $orderRepository, int $id): Response
     {
+        // is granted employee
         $order = $orderRepository->find($id);
         if (!$order) {
             throw $this->createNotFoundException('Order not found');
         }
-
-        $status = $request->getContent();
-
-        $data = json_decode($status, true);
-
-        if (!in_array($data['status'], ['ONGOING', 'TO_PICK_UP', 'DONE'])) {
-            return new JsonResponse(['message' => 'Invalid order status'], Response::HTTP_BAD_REQUEST);
+        switch ($order->getStatus()) {
+            case 'ONGOING':
+                $nextStatus = 'TO_PICK_UP';
+                break;
+            case 'TO_PICK_UP':
+                $nextStatus = 'DONE';
+                break;
+            default:
+                return new JsonResponse(['message' => 'Order status cannot be updated'], Response::HTTP_BAD_REQUEST);
         }
 
-        $previousStatus = $order->getStatus();
-        $order->setStatus($data['status']);
 
-        if($data['status'] === 'DONE'){
+        $order->setStatus($nextStatus);
+        $order->setEmployee(null);
+
+        if($nextStatus === 'DONE'){
             $order->setEmployee($this->getUser());
         }
 
-        // get order user phone number
         $phoneNumber = $order->getClient()->getPhone();
-
-
         $orderRepository->save($order , true);
 
-        if ($order->getStatus() !== $previousStatus) {
-
-            $this->smsService->sendSms($order);
-        }
+        $this->smsService->sendSms($order);
 
         return new JsonResponse(['message' => 'Order status updated'], Response::HTTP_OK);
     }
