@@ -161,4 +161,9 @@ class Article
 
         return $this;
     }
+
+    public function getOrderArticles()
+    {
+        return $this->orders;
+    }
 }
