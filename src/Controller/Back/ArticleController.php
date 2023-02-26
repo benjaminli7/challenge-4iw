@@ -101,6 +101,8 @@ class ArticleController extends AbstractController
                 $articleRepository->remove($article, true);
             }
         } catch (\Exception $e ) {
+
+            //dd($e->getMessage());
             $this->addFlash('danger', $e->getMessage());
         }
 
