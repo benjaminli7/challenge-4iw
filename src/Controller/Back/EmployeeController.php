@@ -48,6 +48,7 @@ class EmployeeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $employee, UserRepository $userRepository): Response
     {
+
         $form = $this->createForm(EmployeeType::class, $employee);
         $form->handleRequest($request);
 
@@ -71,8 +72,8 @@ class EmployeeController extends AbstractController
             if ($this->isCsrfTokenValid('delete'.$employee->getId(), $request->request->get('_token'))) {
                 $userRepository->remove($employee, true);
             }
-        } catch (ForeignKeyConstraintViolationException $e) {
-            $this->addFlash('danger', 'Impossible de supprimer cet employé car il est a une ou plusieurs commande');
+        } catch (\Exception $e ) {
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_app_user_index', [], Response::HTTP_SEE_OTHER);

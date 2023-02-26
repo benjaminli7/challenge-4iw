@@ -39,9 +39,8 @@ class ClientController extends AbstractController
             if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
                 $userRepository->remove($client, true);
             }
-        }
-        catch(ForeignKeyConstraintViolationException $e){
-            $this->addFlash('danger', 'Impossible de supprimer un client qui a des commandes liés');
+        } catch (\Exception $e ) {
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_app_client_index', [], Response::HTTP_SEE_OTHER);

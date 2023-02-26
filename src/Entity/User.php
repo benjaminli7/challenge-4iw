@@ -74,6 +74,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->orders = new ArrayCollection();
     }
 
+    #[ORM\PreRemove]
+    public function ExistOrders(): void
+    {
+        if ($this->orders->count() > 0) {
+            throw new \Exception('Vous ne pouvez pas supprimer un client qui a des commandes.');
+        }
+    }
+
+
 
     public function getId(): ?int
     {
@@ -307,17 +316,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     // ...
 
-    /**
-     * @ORM\PreRemove()
-     */
-    public function preRemove(): void
-    {
-        // Soft delete instead of physically deleting the entity
-        $this->softDelete();
 
-        // Prevent the entity from being physically deleted
-        throw new \RuntimeException('Cannot delete entity directly. Use softDelete() method instead.');
-    }
+
 
 
 }

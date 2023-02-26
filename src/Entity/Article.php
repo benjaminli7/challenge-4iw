@@ -47,7 +47,11 @@ class Article
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_name = null;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Order::class)]
+    #[ORM\JoinTable(name: "order_article")]
+    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\InverseJoinColumn(name: "order_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+
     private Collection $orders;
 
     public function __construct()

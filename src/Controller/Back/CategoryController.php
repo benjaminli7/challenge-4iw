@@ -51,14 +51,16 @@ class CategoryController extends AbstractController
         ]);
     }
 
+
+
     #[Route('/category/{id}', name: 'category_delete', methods: ['POST'])]
     public function delete(Request $request, Category $category, CategoryRepository $categoryRepository): Response {
         if ($this->isCsrfTokenValid('delete'.$category->getId(), $request->request->get('_token'))) {
             try {
                 $categoryRepository->remove($category, true);
                 $this->addFlash('success', 'Category has been deleted successfully.');
-            } catch (ForeignKeyConstraintViolationException $e) {
-                $this->addFlash('danger', 'One or more orders are linked to this category.');
+            } catch (\Exception $e ) {
+                $this->addFlash('danger', $e->getMessage());
             }
         } else {
             $this->addFlash('error', 'Invalid CSRF token.');
