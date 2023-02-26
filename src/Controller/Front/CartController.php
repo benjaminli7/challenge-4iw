@@ -85,31 +85,32 @@ class CartController extends AbstractController
 
         Stripe::setApiKey($this->getParameter('STRIPE_SECRET'));
 
+
         $session = Session::create([
             'payment_method_types' => ['card'],
             'line_items' => $this->getLineItems($cart),
             'mode' => 'payment',
-            'success_url' => $baseUrl . $this->generateUrl('client_checkout_success'),
+            'success_url' => $baseUrl . $this->generateUrl('client_checkout_success') . "?session_id={CHECKOUT_SESSION_ID}",
             'cancel_url' => $baseUrl . $this->generateUrl('client_checkout_cancel'),
         ]);
 
         return $this->redirect($session->url);
     }
 
-
-
     #[Route('/checkout/success', name: 'checkout_success')]
     public function checkoutSuccess(Request $request, ArticleRepository $articleRepository, OrderRepository $orderRepository): Response
     {
+        Stripe::setApiKey($this->getParameter('STRIPE_SECRET'));
+        try {
+            $session = Session::retrieve($_GET['session_id']);
+        } catch (\Exception $e) {
+            return $this->redirectToRoute('client_checkout_cancel');
+        }
+
 
         $cart = $request->getSession()->get('cart', []);
 
         $user = $this->getUser();
-
-        if (empty($cart)) {
-            return $this->redirectToRoute('client_default_index');
-        }
-
 
         $order = (new Order())
             ->setStatus('ONGOING')
@@ -127,8 +128,8 @@ class CartController extends AbstractController
         $articles = $order->getOrderArticles()->getValues();
         $totalPrice = 0;
 
-        foreach($articles as $article) {
-            
+        foreach ($articles as $article) {
+
             $article->getArticle()->setOrderCount($article->getQuantity());
             $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
         }
