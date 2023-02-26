@@ -32,8 +32,7 @@
         {% endblock %}
     </head>
     <body class="font-ibm">
-    {% include 'partials/_flash_messages.html.twig' %}
-    <button data-drawer-target="logo-sidebar"
+        <button data-drawer-target="logo-sidebar"
             data-drawer-toggle="logo-sidebar"
             aria-controls="logo-sidebar"
             type="button"
@@ -231,6 +230,7 @@
         </aside>
 
         <div class="p-8 sm:ml-64">
+            {% include 'partials/_flash_messages.html.twig' %}
             {% block body %}
 
             {% endblock %}
