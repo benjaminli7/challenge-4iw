@@ -1,52 +1,20 @@
 {% extends 'base_back.html.twig' %}
 
+{% block title %}
+    B+B - Dashboard
+{% endblock %}
+
 {% block body %}
-    <h1>Dashboard</h1>
-    <div class="row">
-        <div class="col-md-6">
-            <canvas id="sales-chart" style="height: 50vh;"></canvas>
-        </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h5>Best Seller Article</h5>
-                </div>
-                <div class="card-body">
-                    <p>Here you can display the best seller article or any other relevant information.</p>
-                </div>
+    <h1 class="title-back">Statistiques</h1>
+
+    <div class="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center flex flex-col gap-8">
+        {% for stat in stats %}
+            <div class="block w-full h-full p-6 bg-white border border-gray-200 rounded-lg shadow">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ stat.label }}</h5>
+                <p class="font-normal text-gray-700 dark:text-gray-400">{{ stat.value }}</p>
             </div>
-        </div>
+        {% endfor %}
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@3.7.0/dist/chart.min.js"></script>
-    <script>
-        // récupérer les données de vente passées par le contrôleur
-        const salesByMonth = {{ sales_by_month|json_encode()|raw }};
 
-        // créer un tableau de labels (mois) et de valeurs (ventes)
-        const labels = Object.keys(salesByMonth);
-        const values = Object.values(salesByMonth);
-
-        // créer un graphique en barres avec Chart.js
-        const chart = new Chart('sales-chart', {
-            type: 'bar',
-            data: {
-                labels: labels,
-                datasets: [{
-                    label: 'Chiffre d\'affaires mensuel',
-                    data: values ,
-                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
-                    borderColor: 'rgba(54, 162, 235, 1)',
-                    borderWidth: 1
-                }]
-            },
-            options: {
-                scales: {
-                    y: {
-                        beginAtZero: true
-                    }
-                }
-            }
-        });
-    </script>
 {% endblock %}
