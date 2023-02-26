@@ -28,16 +28,16 @@ class SmsService
         // Set the message based on the status
         switch ($status) {
             case 'ONGOING':
-                $messageBody = sprintf('Your order #%d is now being prepared.', $order->getId());
+                $messageBody = sprintf('Votre commande #%d est en cours de préparation.', $order->getId());
                 break;
             case 'TO_PICK_UP':
-                $messageBody = sprintf('Your order #%d is ready for pick up!', $order->getId());
+                $messageBody = sprintf('Votre commande #%d est prête à étre récupérée!', $order->getId());
                 break;
             case 'DONE':
-                $messageBody = sprintf('Your order #%d has been delivered. Enjoy your meal!', $order->getId());
+                $messageBody = sprintf('Votre commande #%d a bien été délivrée. Bon appétit!', $order->getId());
                 break;
             default:
-                $messageBody = sprintf('Your order #%d has been updated to %s.', $order->getId(), $status);
+                $messageBody = sprintf('Votre commande #%d a été mise à jour à %s.', $order->getId(), $status);
                 break;
         }
         // Send the SMS message

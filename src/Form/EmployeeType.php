@@ -6,6 +6,7 @@ use App\Entity\User;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Validator\Constraints\Email;
+use Symfony\Component\Validator\Constraints\Length;
 use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
@@ -14,6 +15,7 @@ use Symfony\Component\Form\Extension\Core\Type\EmailType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
+use Symfony\Component\Validator\Constraints\Regex;
 
 
 class EmployeeType extends AbstractType
@@ -57,8 +59,28 @@ class EmployeeType extends AbstractType
                     'placeholder' => 'Email',
                 ],
                 'required' => true,
+            ])
+            ->add('phone', TextType::class, [
+                'constraints' => [
+                    new NotBlank([
+                        'message' => 'Entrez un numéro de téléphone',
+                    ]),
+                    new Length([
+                        'max' => 10,
+                        'maxMessage' => 'Le numéro de téléphone ne doit pas dépasser {{ limit }} caractères.',
+                    ]),
+                    new Regex([
+                        'pattern' => '/^[0-9]+$/',
+                        'message' => 'Le numéro de téléphone ne doit contenir que des chiffres.',
+                    ]),
+                ],
+                'attr' => [
+                    'placeholder' => 'Téléphone',
+                ],
+                'required' => true,
             ]);
-            
+
+
 
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) {

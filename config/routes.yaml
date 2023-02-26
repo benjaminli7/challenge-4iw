@@ -19,6 +19,7 @@ controllers_employee:
     name_prefix: employee_
     prefix: /employee/
 
+
 admin_promotions_create:
     path: /admin/promotions/creer
     controller: App\Controller\Back\PromotionController::create
@@ -42,3 +43,12 @@ contact:
 admin_messages_list:
     path: /admin/contacts
     controller: App\Controller\Back\ContactController::list
+
+app_pdf_generate_orders:
+    path: /pdf/generate/orders
+    controller: App\Controller\Back\PdfGenerateController::generateOrdersPdf
+
+app_pdf_generate_employees:
+    path: /pdf/generate/employees
+    controller: App\Controller\Back\PdfGenerateController::generateEmployeesPdf
+

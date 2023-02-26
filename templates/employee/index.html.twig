@@ -12,7 +12,7 @@
                 <h2 class="font-bold text-lg mb-2">Commandes en cours</h2>
                 <div class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for order in ordersOngoing|sort((a, b) => b.id <=> a.id) %}
-                        <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                        <div id="to-pick-up-{{ order.id }}" class="bg-white border-gray-300 border rounded-lg shadow-md p-4 flex flex-col justify-between">
                             <div>
                                 <h2  class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                                 {% for orderArticle in order.orderArticles %}
@@ -22,7 +22,7 @@
                                 {% endfor %}
                                 <div class="text-lg font-bold mb-4">Prix total: {{ order.getTotalPrice() }} €</div>
                             </div>
-                            <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                            <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto hover:opacity-80 transition-opacity duration-300" onclick="updateOrderStatus({{ order.id }})">A récupérer</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -32,7 +32,7 @@
                 <h2 class="font-bold text-lg mb-2">Commandes à récupérer par le client</h2>
                 <div id="to-pick-up" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
                     {% for order in ordersToPickUp|sort((a, b) => b.id <=> a.id) %}
-                        <div id="to-pick-up-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
+                        <div id="to-pick-up-{{ order.id }}" class="bg-white border-gray-300 border rounded-lg shadow-md p-4 flex flex-col justify-between">
                             <div>
                                 <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                                 {% for orderArticle in order.orderArticles %}
@@ -44,7 +44,7 @@
                             </div>
                             {% if order.status == 'TO_PICK_UP' %}
                                 <div class="flex justify-center">
-                                    <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                                    <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full hover:opacity-80 transition-opacity duration-300" onclick="updateOrderStatus({{ order.id }})">Terminé</button>
                                 </div>
                             {% endif %}
                         </div>
@@ -55,7 +55,7 @@
                 <h2 class="font-bold text-lg mb-2">Commandes terminées</h2>
                 <div id="delivered" class="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 delivered">
                     {% for order in ordersDoneLastTen %}
-                        <div id="delivered-order-{{ order.id }}" class="bg-white rounded-lg shadow-md p-4">
+                        <div id="delivered-order-{{ order.id }}" class="bg-white border-gray-300 border opacity-50 rounded-lg shadow-md p-4">
                             <h2 class="font-bold text-lg mb-2">#{{ order.id }}</h2>
                             {% for orderArticle in order.orderArticles %}
                                 <div class="mb-2">
@@ -74,15 +74,12 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        function updateOrderStatus(orderId, status) {
+        function updateOrderStatus(orderId) {
             fetch(`/employee/order/${orderId}/status`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: status
-                })
+                }
             })
                 .then(response => {
                     if (response.ok) {

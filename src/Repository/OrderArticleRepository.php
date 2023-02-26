@@ -39,6 +39,19 @@ class OrderArticleRepository extends ServiceEntityRepository
         }
     }
 
+    public function findMostOrderedArticleByDate($date)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.id, SUM(o.quantity) as total')
+            ->andWhere('o.date = :date')
+            ->setParameter('date', $date)
+            ->groupBy('o.id')
+            ->orderBy('total', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult();
+    }
+
 //    /**
 //     * @return OrderArticle[] Returns an array of OrderArticle objects
 //     */
@@ -63,4 +76,15 @@ class OrderArticleRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findBestSeller()
+    {
+           return $this->createQueryBuilder('o')
+                ->select('o.id, SUM(o.quantity) as total')
+                ->groupBy('o.id')
+                ->orderBy('total', 'DESC')
+                ->setMaxResults(5)
+                ->getQuery()
+                ->getResult()
+        ;
+    }
 }
