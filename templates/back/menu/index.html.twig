@@ -1,42 +1,80 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}MenuController{% endblock %}
+{% block title %}
+    B+B - Menu
+{% endblock %}
 
 {% block body %}
+    <h1 class="title-back">
+        Menu
+    </h1>
 
-    <a href="{{ path("admin_category_new") }}">Ajouter une categorie</a>
-    <a href="{{ path("admin_article_new")}}">Ajouter un article</a>
-
-
-    <h1 class="title-back">Menu</h1>
-
-    {% for category in categories %}
-    <div class="mb-5">
-        <h2 class="text-xl font-bold mb-3">
-        {{ category.name }}
-        <a href="{{ path('admin_category_edit', {'id': category.id}) }}">
-            <i class="fa-solid fa-pen-to-square"></i>
-        </a>
-        </h2>
-
-        <ul>
-            {% for article in category.articles %}
-                <li>
-                <a href="{{ path('admin_article_edit', {'id': article.id}) }}">
-                {{ article.name }}
-                {% if article.getImageName() %}
-                    <img src="{{ asset('uploads/articles/' ~ article.getImageName()) }}" alt="{{ article.name }} image" style="width: 150px; height: 150px">
-                {% else %}
-                    <img src="{{ asset('images/placeholder150.png') }}" alt="{{ article.name }} image" style="width: 150px; height: 150px">
-                {% endif %}
-                </a>
-                </li>
-            {% endfor %}
-        </ul>
+    <div class="mb-8">
+        <a href="{{ path("admin_category_new") }}" class="btn-pink">Ajouter une catégorie</a>
+        <a href="{{ path("admin_article_new")}}" class="btn-pink">Ajouter un article</a>
     </div>
-    {% endfor %}
 
+    <div class="flex flex-col gap-[80px]">
+        {% for category in categories %}
+            <div>
+                <h2 class="text-xl font-bold mb-3 flex items-center gap-3">
+                    {{ category.name }}
+                    <a href="{{
+                        path(
+                            'admin_category_edit',
+                            {
+                                id: category.id
+                            }
+                        )
+                        }}">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </a>
+                </h2>
 
-
-
+                <div class="sm:grid-cols-2 md:grid lg:grid-cols-4 place-items-center flex flex-col gap-8">
+                    {% for article in category.articles %}
+                        <a href="{{ path('admin_article_edit', {'id': article.id}) }}" class="w-full h-full rounded overflow-hidden shadow-lg">
+                            {% if article.getImageName() %}
+                                <img class="w-full h-[157px] object-cover"
+                                    src="{{
+                                    asset(
+                                        'uploads/articles/'
+                                            ~ article.getImageName()
+                                    )
+                                    }}"
+                                    alt="{{ article.name }}" />
+                            {% else %}
+                                <img class="w-full h-[157px] object-cover"
+                                    src="{{
+                                    asset(
+                                        'images/placeholder150.png'
+                                    )
+                                    }}"
+                                    alt="{{ article.name }}" />
+                            {% endif %}
+                            <div class="px-6 py-4">
+                                <div class="font-bold text-xl mb-2">
+                                    {{ article.name}}
+                                </div>
+                                <p class="text-gray-700 text-base">
+                                    {{ article.price }} €
+                                </p>
+                            </div>
+                            {# <div class="px-6 pt-4 pb-2">
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                    #photography
+                                </span>
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                    #travel
+                                </span>
+                                <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2">
+                                    #winter
+                                </span>
+                            </div> #}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+    </div>
 {% endblock %}

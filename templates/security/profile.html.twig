@@ -3,11 +3,68 @@
 {% block title %}Profile update!{% endblock %}
 
 {% block body %}
-    {{ form_start(form) }}
-        {% for row in form %}
-            {{ form_row(row.name, {'row_attr': {'class': 'custom-class'}}) }}
-            {{ form_label(row.name, "test")}}
+
+
+
+    {{ form_start(form, {'attr': {'class': 'px-3 mt-10 flex flex-col gap-6 max-w-sm m-auto'}}) }}
+        <h1 class="font-bold text-xl mb-5">Modifier mon profil</h1>
+        {% for child in form.children %}
+            {% if child.vars.name != '_token' and child.vars.name != 'plainPassword' %}
+                <div class="relative">
+                {{ form_label(child, child.vars.label, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+                    {{
+                        form_widget(
+                            child,
+                            {
+                                attr: {
+                                    class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                                }
+                            }
+                        )
+                    }}
+                </div>
+            {% endif %}
+    {% if child.vars.name == 'plainPassword' %}
+        <div class="relative">
+        {{ form_label(child, form.plainPassword.first.vars.label, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+
+            {{
+                form_widget(
+                    form.plainPassword.first,
+                    {
+                        attr: {
+                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                        }
+                    }
+                )
+            }}
+        </div>
+        {% if form.plainPassword.first.vars.errors is not empty %}
+            <div class="bg-red-500 text-white p-3 rounded-lg text-sm">
+                {{ form_errors(form.plainPassword.first) }}
+            </div>
+        {% endif %}
+
+        <div class="relative">
+        {{ form_label(child, form.plainPassword.second.vars.label, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+        
+            {{
+                form_widget(
+                    form.plainPassword.second,
+                    {
+                        attr: {
+                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
+                        }
+                    }
+                )
+            }}
+            {{ form_errors(form.plainPassword.second) }}
+        </div>
+    {% endif %}
         {% endfor %}
-        <input type="submit" value="S'enregistrer">
+
+        <button class="bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300">{{ button_label|default('Mettre à jour') }}</button>
+        <a href="{{ path('app_logout') }}" class="bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300 text-center">Se déconnecter</a>
+
     {{ form_end(form) }}
 {% endblock %}

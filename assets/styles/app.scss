@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -7,19 +8,40 @@
 .btn-security {
     @apply bg-primary-red rounded-3xl py-2 text-white font-bold;
 }
+
+.btn-red {
+    @apply bg-red-600 rounded-3xl px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
+.btn-pink {
+    @apply bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300;
+}
+
 .hover {
     @apply hover:opacity-80 transition duration-300 ease-in-out;
 }
 .alert-danger {
-    @apply bg-red-500 text-white p-3 rounded-3xl;
+    @apply bg-danger border border-danger-border text-black p-3 rounded-3xl text-[14px];
 }
 
 .alert-success {
-    @apply bg-green-500 text-white p-3 rounded-3xl;
+    @apply bg-success border border-success-border text-black p-3 rounded-3xl text-[14px];
 }
 
 
 @layer components {
+    .trunc {
+      overflow:hidden;
+      -webkit-box-orient: vertical;
+      display: block;
+      display: -webkit-box;
+      overflow: hidden !important;
+      text-overflow: ellipsis;
+      -webkit-line-clamp: 4;
+    }
+    .swiper-button-prev, .swiper-button-next {
+      @apply text-primary-pink;
+    }
     .title-back {
         @apply text-2xl font-bold mb-10;
     }
@@ -37,7 +59,7 @@
       }
       
       .styled-table thead tr {
-        background-color: #695CFE;
+        @apply bg-primary-pink;
         color: #ffffff;
         text-align: left;
       }
@@ -67,5 +89,9 @@
       
       .styled-table tbody tr.styled-row:hover {
         background-color: rgb(105, 92, 254, 0.1);
+      }
+
+      #table_id_wrapper {
+        margin-top: 30px;
       }
 }

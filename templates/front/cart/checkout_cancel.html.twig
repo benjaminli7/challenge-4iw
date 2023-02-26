@@ -1,12 +1,23 @@
 {% extends 'base_front.html.twig' %}
 
-{% block title %}B+B - Cart{% endblock %}
+{% block title %}
+    B+B - Cart
+{% endblock %}
 
 {% block body %}
-<div>Cart</div>
-
-<h1>Désolé, votre paiement a échoué...</h1>
-
-<a href="{{ path('client_app_cart')}}">Retourner au panier</a>
-
+    <div class="font-ibm p-8 w-full max-w-sm m-auto flex flex-col gap-6 justify-center items-center">
+        <div class="flex flex-col gap-4 text-center">
+            <i class="fa-solid fa-xmark text-primary-red text-[64px]"></i>
+            <h1 class="text-primary-red font-bold text-xl">
+                Ooops...
+            </h1>
+            <h1 class="text-gray-400">
+                Le paiement a échoué, veuillez réessayer
+            </h1>
+        </div>
+        <a href="{{ path('client_app_cart') }}"
+            class="bg-primary-red text-white px-8 py-3 rounded-3xl hover:opacity-80 transition-opacity duration-250">
+            Réessayer
+        </a>
+    </div>
 {% endblock %}
