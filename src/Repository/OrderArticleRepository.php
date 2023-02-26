@@ -39,6 +39,8 @@ class OrderArticleRepository extends ServiceEntityRepository
         }
     }
 
+
+
 //    /**
 //     * @return OrderArticle[] Returns an array of OrderArticle objects
 //     */
@@ -63,4 +65,15 @@ class OrderArticleRepository extends ServiceEntityRepository
 //            ->getOneOrNullResult()
 //        ;
 //    }
+    public function findBestSeller()
+    {
+        return $this->createQueryBuilder('o')
+            ->select('o.article, SUM(o.quantity) as total')
+            ->groupBy('o.article')
+            ->orderBy('total', 'DESC')
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getResult()
+        ;
+    }
 }
