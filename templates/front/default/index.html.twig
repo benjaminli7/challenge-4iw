@@ -8,11 +8,13 @@
 
     <nav class="bg-white px-2 sm:px-4 py-2.5 dark:bg-gray-900 w-full border-b border-gray-200 dark:border-gray-600">
         <div class="flex flex-row justify-center items-center gap-3">
-            {% for category in categories %}
-                <a href="#"
-                    class="text-front-red text-lg mr-4 hover:font-bold transition-[font-weight] duration-250">
-                    {{ category.name }}
-                </a>
+            {% for index, category in categories %}
+                {% if category.articles is not empty %}
+                    <a href="#category{{ index }}"
+                        class="text-front-red text-lg mr-4 hover:font-bold transition-[font-weight] duration-250">
+                        {{ category.name }}
+                    </a>
+                {% endif %}
             {% endfor %}
         </div>
     </nav>
@@ -22,68 +24,70 @@
             <div class="bg-success border text-center border-success-border text-black p-3 rounded-lg">{{ message }}</div>
         {% endfor %}
         <div class="flex flex-col gap-[80px]">
-            {% for category in categories %}
-                <div class="flex flex-col gap-5">
-                    <h2 class="font-bold text-xl text-center">
-                        {{ category.name }}
-                    </h2>
-                    <div class="md:grid md:grid-cols-3 lg:grid-cols-4 place-items-center flex flex-col gap-16">
-                        {% for article in category.articles %}
-                            <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
-                                <div class="flex flex-col items-center py-10">
-                                    {% if article.getImageName() %}
-                                        <img class="w-24 h-24 object-cover mb-3 rounded-3xl shadow-lg"
-                                            src="{{
-                                            asset(
-                                                'uploads/articles/'
-                                                    ~ article.getImageName()
-                                            )
-                                            }}"
-                                            alt="{{ article.name }}" />
-                                    {% else %}
-                                        <img class="w-24 h-24 mb-3 rounded-3xl shadow-lg"
-                                            src="{{
-                                            asset(
-                                                'images/placeholder150.png'
-                                            )
-                                            }}"
-                                            alt="{{ article.name }}" />
-                                    {% endif %}
+            {% for index, category in categories %}
+                {% if category.articles is not empty %}
+                    <div id="category{{ index }}" class="flex flex-col gap-5">
+                        <h2 class="font-bold text-xl text-center">
+                            {{ category.name }}
+                        </h2>
+                        <div class="md:grid md:grid-cols-3 lg:grid-cols-4 place-items-center flex flex-col gap-16">
+                            {% for article in category.articles %}
+                                <div class="w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+                                    <div class="flex flex-col items-center py-10">
+                                        {% if article.getImageName() %}
+                                            <img class="w-24 h-24 object-cover mb-3 rounded-3xl shadow-lg"
+                                                src="{{
+                                                asset(
+                                                    'uploads/articles/'
+                                                        ~ article.getImageName()
+                                                )
+                                                }}"
+                                                alt="{{ article.name }}" />
+                                        {% else %}
+                                            <img class="w-24 h-24 mb-3 rounded-3xl shadow-lg"
+                                                src="{{
+                                                asset(
+                                                    'images/placeholder150.png'
+                                                )
+                                                }}"
+                                                alt="{{ article.name }}" />
+                                        {% endif %}
 
-                                    <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-                                        {{ article.name }}
-                                    </h5>
-                                    <div class="mb-3">
-                                        {% for tag in article.tags %}
-                                            <span style="background-color:{{ tag.color }}"
-                                                class="text-black text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
-                                                {{ tag.name }}
-                                            </span>
-                                        {% endfor %}
-                                    </div>
-                                    <span class="text-sm text-gray-500 dark:text-gray-400">
-                                        {{ article.price }} €
-                                    </span>
-                                    <div class="wrapper flex mt-4 space-x-3 md:mt-6" data-article="{{ article.id }}">
-                                        <button class="remove-from-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
-                                            data-article-id="{{ article.id }}">
-                                            <i class="text-front-red fa-solid fa-minus">
+                                        <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
+                                            {{ article.name }}
+                                        </h5>
+                                        <div class="mb-3">
+                                            {% for tag in article.tags %}
+                                                <span style="background-color:{{ tag.color }}"
+                                                    class="text-black text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                    {{ tag.name }}
+                                                </span>
+                                            {% endfor %}
+                                        </div>
+                                        <span class="text-sm text-gray-500 dark:text-gray-400">
+                                            {{ article.price }} €
+                                        </span>
+                                        <div class="wrapper items-center flex mt-4 space-x-3 md:mt-6" data-article="{{ article.id }}">
+                                            <button class="remove-from-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
+                                                data-article-id="{{ article.id }}">
+                                                <i class="text-front-red fa-solid fa-minus">
 
-                                            </i>
-                                        </button>
-                                        <span>0</span>
-                                        <button class="add-to-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
-                                            data-article-id="{{ article.id }}">
-                                            <i class="text-front-red fa-solid fa-plus">
+                                                </i>
+                                            </button>
+                                            <span class="font-bold">0</span>
+                                            <button class="add-to-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
+                                                data-article-id="{{ article.id }}">
+                                                <i class="text-front-red fa-solid fa-plus">
 
-                                            </i>
-                                        </button>
+                                                </i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        {% endfor %}
+                            {% endfor %}
+                        </div>
                     </div>
-                </div>
+                {% endif %}
             {% endfor %}
         </div>
 
@@ -147,7 +151,7 @@
         </div>
         <div class="sticky bottom-0 right-0 p-4 flex justify-end items-center">
             <a href="{{ path('client_app_cart') }}">
-                <button class="bg-front-red p-4 rounded-full hover:opacity-50 transition-opacity">
+                <button class="bg-primary-pink p-4 rounded-full hover:opacity-50 transition-opacity">
                     <i class="fa-solid fa-shopping-cart text-white"></i>
                     <span id="cart-item-count" class="text-white">
                         {{ cart_quantity }}

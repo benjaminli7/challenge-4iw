@@ -13,55 +13,36 @@ class OrderFixtures extends Fixture implements DependentFixtureInterface
 {
     public function load(ObjectManager $manager): void
     {
-
-        $user1 = $manager->getRepository(User::class)->findOneBy(['email' => '0client@user.fr']);
-        $user2 = $manager->getRepository(User::class)->findOneBy(['email' => '1client@user.fr']);
+        $articles = $manager->getRepository(Article::class)->findAll();
+        $user = $manager->getRepository(User::class)->findAll();
         $employee1 = $manager->getRepository(User::class)->findOneBy(['email' => 'employee@user.fr']);
 
-        $article1 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Coca']);
-        $article2 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Fanta']);
-        $article3 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Sprite']);
-        $article4 = $manager->getRepository(Article::class)->findOneBy(['name' => 'Eau']);
-        
-        $order1 = (new Order())
-            ->setStatus('ONGOING')
-            ->setDate(new \DateTime())
-            ->setClient($user1)
-            ->addArticle($article1, 2)
-            ->addArticle($article2, 3)
-            ->setEmployee($employee1)
-        ;
+        for($i = 0; $i < 10; $i++) {
+            $randomArticle = $articles[array_rand($articles, 1)];
+            $randomArticle2 = $articles[array_rand($articles, 1)];
+            $randomArticle3 = $articles[array_rand($articles, 1)];
+            $randomUser = $user[array_rand($user, 1)];
 
-        $articles = $order1->getOrderArticles()->getValues();
-        $totalPrice = 0;
+            $order = (new Order())
+                ->setStatus('ONGOING')
+                ->setDate(new \DateTime())
+                ->setClient($randomUser)
+                ->addArticle($randomArticle, rand(1, 3))
+                ->addArticle($randomArticle2, rand(1, 3))
+                ->addArticle($randomArticle3, rand(1, 3))
+                ->setEmployee($employee1)
+            ;
 
-        foreach ($articles as $article) {
-            $article->getArticle()->setOrderCount($article->getQuantity());
-            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
+            $totalPrice = 0;
+            $order_articles = $order->getOrderArticles()->getValues();
+            foreach ($order_articles as $order_article) {
+                $order_article->getArticle()->setOrderCount($order_article->getQuantity());
+                $totalPrice += $order_article->getArticle()->getPrice() * $order_article->getQuantity();
+            }
+            $order->setTotalPrice($totalPrice);
+
+            $manager->persist($order);
         }
-        $order1->setTotalPrice($totalPrice);
-
-        $manager->persist($order1);
-
-        $order2 = (new Order())
-            ->setStatus('ONGOING')
-            ->setDate(new \DateTime())
-            ->setClient($user2)
-            ->addArticle($article3, 1)
-            ->addArticle($article4, 2)
-            ->setEmployee($employee1)
-        ;
-
-        $articles = $order2->getOrderArticles()->getValues();
-        $totalPrice = 0;
-
-        foreach ($articles as $article) {
-            $article->getArticle()->setOrderCount($article->getQuantity());
-            $totalPrice += $article->getArticle()->getPrice() * $article->getQuantity();
-        }
-        $order2->setTotalPrice($totalPrice);
-
-        $manager->persist($order2);
 
         $manager->flush();
     }
