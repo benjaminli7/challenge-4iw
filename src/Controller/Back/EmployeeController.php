@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/employee')]
 class EmployeeController extends AbstractController
@@ -46,6 +48,7 @@ class EmployeeController extends AbstractController
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $employee, UserRepository $userRepository): Response
     {
+
         $form = $this->createForm(EmployeeType::class, $employee);
         $form->handleRequest($request);
 
@@ -65,8 +68,12 @@ class EmployeeController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $employee, UserRepository $userRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$employee->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($employee, true);
+        try {
+            if ($this->isCsrfTokenValid('delete'.$employee->getId(), $request->request->get('_token'))) {
+                $userRepository->remove($employee, true);
+            }
+        } catch (\Exception $e ) {
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_app_user_index', [], Response::HTTP_SEE_OTHER);
