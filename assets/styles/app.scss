@@ -20,8 +20,17 @@
 .hover {
     @apply hover:opacity-80 transition duration-300 ease-in-out;
 }
+
+.alert-danger-lg {
+    @apply bg-danger border border-danger-border text-black p-3 rounded-lg text-[14px];
+}
+
 .alert-danger {
     @apply bg-danger border border-danger-border text-black p-3 rounded-3xl text-[14px];
+}
+
+.alert-success-lg {
+    @apply bg-success border border-success-border text-black p-3 rounded-3xl text-[14px];
 }
 
 .alert-success {

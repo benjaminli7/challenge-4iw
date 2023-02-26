@@ -74,16 +74,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->orders = new ArrayCollection();
     }
 
-    #[ORM\PreRemove]
-    public function ExistOrders(): void
-    {
-        if ($this->orders->count() > 0) {
-            throw new \Exception('Vous ne pouvez pas supprimer un client qui a des commandes.');
-        }
-    }
-
-
-
     public function getId(): ?int
     {
         return $this->id;
