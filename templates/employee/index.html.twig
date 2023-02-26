@@ -22,7 +22,7 @@
                                 {% endfor %}
                                 <div class="text-lg font-bold mb-4">Prix total: {{ order.getTotalPrice() }} €</div>
                             </div>
-                            <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto" onclick="updateOrderStatus({{ order.id }}, 'TO_PICK_UP')">A récupérer</button>
+                            <button id="ongoing-order-{{ order.id }}"  class="bg-blue-500 text-white py-2 px-4 rounded-md mt-auto" onclick="updateOrderStatus({{ order.id }})">A récupérer</button>
                         </div>
                     {% endfor %}
                 </div>
@@ -44,7 +44,7 @@
                             </div>
                             {% if order.status == 'TO_PICK_UP' %}
                                 <div class="flex justify-center">
-                                    <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full" onclick="updateOrderStatus({{ order.id }}, 'DONE')">Terminé</button>
+                                    <button id="to-pick-up-order-{{ order.id }}" class="bg-green-500 text-white py-2 px-4 rounded-md mt-auto w-full" onclick="updateOrderStatus({{ order.id }})">Terminé</button>
                                 </div>
                             {% endif %}
                         </div>
@@ -74,15 +74,12 @@
 {% endblock %}
 {% block javascripts %}
     <script>
-        function updateOrderStatus(orderId, status) {
+        function updateOrderStatus(orderId) {
             fetch(`/employee/order/${orderId}/status`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({
-                    status: status
-                })
+                }
             })
                 .then(response => {
                     if (response.ok) {
