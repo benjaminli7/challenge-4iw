@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -94,8 +96,12 @@ class ArticleController extends AbstractController
     #[Route('/{id}', name: 'article_delete', methods: ['POST'])]
     public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
-            $articleRepository->remove($article, true);
+        try {
+            if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
+                $articleRepository->remove($article, true);
+            }
+        } catch (\Exception $e ) {
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);

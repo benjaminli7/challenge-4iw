@@ -25,7 +25,8 @@ class Review
     private ?string $comment = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'reviews')]
-    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false)]
+    #[ORM\JoinColumn(name: "user_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+
     private ?User $user = null;
 
     // approved by admin or not

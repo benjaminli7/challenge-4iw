@@ -15,6 +15,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: '`article`')]
 #[UniqueEntity(fields: ['name'])]
+#[ORM\HasLifecycleCallbacks]
+
 class Article
 {
     use TimestampableTrait;
@@ -48,7 +50,11 @@ class Article
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_name = null;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Order::class)]
+    #[ORM\JoinTable(name: "order_article")]
+    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\InverseJoinColumn(name: "order_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+
     private Collection $orders;
 
     public function __construct()
@@ -84,6 +90,14 @@ class Article
         return $this;
     }
     
+    #[ORM\PreRemove]
+    public function checkForOrders(): void
+    {
+        if ($this->orders->count() > 0) {
+            throw new \Exception('Cannot delete an article that is linked to an order.');
+        }
+    }
+
     public function getId(): ?int
     {
         return $this->id;
@@ -157,22 +171,5 @@ class Article
         return $this->orders;
     }
 
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->addArticle($this);
-        }
 
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            $order->removeArticle($this);
-        }
-
-        return $this;
-    }
 }
