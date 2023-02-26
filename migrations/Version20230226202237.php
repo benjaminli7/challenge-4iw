@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230226164333 extends AbstractMigration
+final class Version20230226202237 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -20,6 +20,14 @@ final class Version20230226164333 extends AbstractMigration
     public function up(Schema $schema): void
     {
         // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE SEQUENCE "article_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE category_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE "order_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE order_article_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE pdf_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE review_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE tag_id_seq INCREMENT BY 1 MINVALUE 1 START 1');
+        $this->addSql('CREATE SEQUENCE "user_id_seq" INCREMENT BY 1 MINVALUE 1 START 1');
         $this->addSql('CREATE TABLE "article" (id INT NOT NULL, category_id INT NOT NULL, name VARCHAR(50) NOT NULL, price DOUBLE PRECISION NOT NULL, order_count INT NOT NULL, image_name VARCHAR(255) DEFAULT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_23A0E6612469DE2 ON "article" (category_id)');
         $this->addSql('CREATE TABLE article_order (article_id INT NOT NULL, order_id INT NOT NULL, PRIMARY KEY(article_id, order_id))');
@@ -32,7 +40,7 @@ final class Version20230226164333 extends AbstractMigration
         $this->addSql('CREATE TABLE order_article (id INT NOT NULL, order_id INT NOT NULL, article_id INT NOT NULL, quantity INT NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_F440A72D8D9F6D38 ON order_article (order_id)');
         $this->addSql('CREATE INDEX IDX_F440A72D7294869C ON order_article (article_id)');
-        $this->addSql('CREATE TABLE pdf (id INT NOT NULL, PRIMARY KEY(id))');
+        $this->addSql('CREATE TABLE pdf (id INT NOT NULL, name VARCHAR(255) NOT NULL, chemin VARCHAR(255) NOT NULL, date DATE NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE TABLE review (id INT NOT NULL, user_id INT NOT NULL, note INT NOT NULL, comment VARCHAR(1000) NOT NULL, approved BOOLEAN NOT NULL, created_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, updated_at TIMESTAMP(0) WITHOUT TIME ZONE DEFAULT CURRENT_TIMESTAMP NOT NULL, PRIMARY KEY(id))');
         $this->addSql('CREATE INDEX IDX_794381C6A76ED395 ON review (user_id)');
         $this->addSql('CREATE TABLE tag (id INT NOT NULL, name VARCHAR(255) NOT NULL, color VARCHAR(50) NOT NULL, PRIMARY KEY(id))');
@@ -69,6 +77,14 @@ final class Version20230226164333 extends AbstractMigration
     {
         // this down() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE SCHEMA public');
+        $this->addSql('DROP SEQUENCE "article_id_seq" CASCADE');
+        $this->addSql('DROP SEQUENCE category_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE "order_id_seq" CASCADE');
+        $this->addSql('DROP SEQUENCE order_article_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE pdf_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE review_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE tag_id_seq CASCADE');
+        $this->addSql('DROP SEQUENCE "user_id_seq" CASCADE');
         $this->addSql('ALTER TABLE "article" DROP CONSTRAINT FK_23A0E6612469DE2');
         $this->addSql('ALTER TABLE article_order DROP CONSTRAINT FK_829EE1897294869C');
         $this->addSql('ALTER TABLE article_order DROP CONSTRAINT FK_829EE1898D9F6D38');

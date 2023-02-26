@@ -6,6 +6,7 @@ use App\Entity\Order;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
+
 /**
  * @extends ServiceEntityRepository<Order>
  *
@@ -39,6 +40,37 @@ class OrderRepository extends ServiceEntityRepository
             $this->getEntityManager()->flush();
         }
     }
+
+    public function countOrdersByDate(\DateTimeInterface $date)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('COUNT(o.id)')
+            ->where('o.date = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+    public function sumRevenueByDate($date)
+    {
+        return $this->createQueryBuilder('o')
+            ->select('sum(o.total_price)')
+            ->andWhere('o.date = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+    public function findTopEmployeeByDate($date)
+    {
+     // select the employee with most orders on a given date
+        return $this->createQueryBuilder('o')
+            ->select('o.employee')
+            ->andWhere('o.date = :date')
+            ->setParameter('date', $date)
+            ->getQuery()
+            ->getResult();
+    }
+
+
 
 //    /**
 //     * @return Order[] Returns an array of Order objects
