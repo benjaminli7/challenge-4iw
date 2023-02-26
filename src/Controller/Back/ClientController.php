@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/client')]
 class ClientController extends AbstractController
@@ -33,8 +35,13 @@ class ClientController extends AbstractController
     #[Route('/{id}', name: 'app_client_delete', methods: ['POST'])]
     public function delete(Request $request, User $client, UserRepository $userRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($client, true);
+        try{
+            if ($this->isCsrfTokenValid('delete'.$client->getId(), $request->request->get('_token'))) {
+                $userRepository->remove($client, true);
+            }
+        }
+        catch(ForeignKeyConstraintViolationException $e){
+            $this->addFlash('danger', 'Impossible de supprimer un client qui a des commandes liés');
         }
 
         return $this->redirectToRoute('admin_app_client_index', [], Response::HTTP_SEE_OTHER);

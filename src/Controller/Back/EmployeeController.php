@@ -72,7 +72,7 @@ class EmployeeController extends AbstractController
                 $userRepository->remove($employee, true);
             }
         } catch (ForeignKeyConstraintViolationException $e) {
-            $this->addFlash('danger', 'Impossible de supprimer cet employé car il est lié une commande');
+            $this->addFlash('danger', 'Impossible de supprimer cet employé car il est a une ou plusieurs commande');
         }
 
         return $this->redirectToRoute('admin_app_user_index', [], Response::HTTP_SEE_OTHER);
