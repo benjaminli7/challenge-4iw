@@ -7,10 +7,11 @@ use App\Repository\ArticleRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\String\Slugger\SluggerInterface;
 use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/article')]
 class ArticleController extends AbstractController
@@ -91,16 +92,14 @@ class ArticleController extends AbstractController
     }
 
     #[Route('/{id}', name: 'article_delete', methods: ['POST'])]
-    public function delete(Request $request, Article $article, ArticleRepository $articleRepository, SessionInterface $session): Response
+    public function delete(Request $request, Article $article, ArticleRepository $articleRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$article->getId(), $request->request->get('_token'))) {
-            $orders = $article->getOrders();
-            if ($orders->isEmpty()) {
+        try {
+            if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
                 $articleRepository->remove($article, true);
-                $session->getFlashBag()->add('success', 'Article has been deleted successfully.');
-            } else {
-                $session->getFlashBag()->add('error', 'Article cannot be deleted as it is linked to one or more orders.');
             }
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $this->addFlash('danger', 'Cannot delete this article because it is linked to one or more orders.');
         }
 
         return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
