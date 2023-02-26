@@ -53,6 +53,7 @@ class UserType extends AbstractType
                     new NotBlank([
                         'message' => 'Entrez votre nom',
                     ]),
+                    
                 ],
                 'attr' => [
                     'placeholder' => 'Nom',
