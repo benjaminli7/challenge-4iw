@@ -48,11 +48,8 @@ class Article
     private ?string $image_name = null;
 
     #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'articles')]
-    #[ORM\JoinTable(name: 'order_article')]
     private Collection $orders;
 
-    #[ORM\OneToMany(mappedBy: 'article', targetEntity: OrderArticle::class, cascade: ['persist'])]
-    private Collection $orderArticles;
 
     public function __construct()
     {
@@ -140,22 +137,5 @@ class Article
         return $this->orders;
     }
 
-    public function addOrder(Order $order): self
-    {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->addArticle($this);
-        }
 
-        return $this;
-    }
-
-    public function removeOrder(Order $order): self
-    {
-        if ($this->orders->removeElement($order)) {
-            $order->removeArticle($this);
-        }
-
-        return $this;
-    }
 }
