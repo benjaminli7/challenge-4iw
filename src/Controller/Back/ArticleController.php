@@ -62,6 +62,10 @@ class ArticleController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($article->getTags() as $tag) {
+
+                $article->addTag($tag);
+            }   
             $file = $form->get('imageFile')->getData();
 
             if($file){
@@ -78,7 +82,6 @@ class ArticleController extends AbstractController
                 }
                 $article->setImage($newFileName);
             }
-
 
             $articleRepository->save($article, true);
 
