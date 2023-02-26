@@ -9,6 +9,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/employee')]
 class EmployeeController extends AbstractController
@@ -65,8 +67,12 @@ class EmployeeController extends AbstractController
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
     public function delete(Request $request, User $employee, UserRepository $userRepository): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$employee->getId(), $request->request->get('_token'))) {
-            $userRepository->remove($employee, true);
+        try {
+            if ($this->isCsrfTokenValid('delete'.$employee->getId(), $request->request->get('_token'))) {
+                $userRepository->remove($employee, true);
+            }
+        } catch (ForeignKeyConstraintViolationException $e) {
+            $this->addFlash('danger', 'Impossible de supprimer cet employé car il est lié une commande');
         }
 
         return $this->redirectToRoute('admin_app_user_index', [], Response::HTTP_SEE_OTHER);

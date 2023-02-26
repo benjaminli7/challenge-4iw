@@ -1,38 +1,16 @@
-
-
 {{ form_start(form, {'attr': {'class': 'flex flex-col gap-6'}}) }}
-{# {{ form_widget(form) }} #}
 
 {% for child in form.children %}
     {% if child.vars.name != '_token' and child.vars.name != 'plainPassword' %}
         <div class="relative">
-        {{ form_label(child, child.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
-            {{
-                form_widget(
-                    child,
-                    {
-                        attr: {
-                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
-                        }
-                    }
-                )
-            }}
+            {{ form_label(child, child.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+            {{ form_widget(child, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'}}) }}
         </div>
     {% endif %}
     {% if child.vars.name == 'plainPassword' %}
         <div class="relative">
-        {{ form_label(child, form.plainPassword.first.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
-
-            {{
-                form_widget(
-                    form.plainPassword.first,
-                    {
-                        attr: {
-                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
-                        }
-                    }
-                )
-            }}
+            {{ form_label(child, form.plainPassword.first.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+            {{ form_widget(form.plainPassword.first, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'}}) }}
         </div>
         {% if form.plainPassword.first.vars.errors is not empty %}
             <div class="bg-red-500 text-white p-3 rounded-lg text-sm">
@@ -41,22 +19,13 @@
         {% endif %}
 
         <div class="relative">
-        {{ form_label(child, form.plainPassword.second.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
-        
-            {{
-                form_widget(
-                    form.plainPassword.second,
-                    {
-                        attr: {
-                            class: 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'
-                        }
-                    }
-                )
-            }}
+            {{ form_label(child, form.plainPassword.second.vars.attr.placeholder, {'label_attr': {'class': 'block mb-2 text-sm font-medium text-gray-900 dark:text-white'}}) }}
+            {{ form_widget(form.plainPassword.second, {'attr': {'class': 'bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5'}}) }}
             {{ form_errors(form.plainPassword.second) }}
         </div>
     {% endif %}
 {% endfor %}
 
 <button class="bg-primary-pink rounded-lg px-6 py-3 text-white font-bold hover:opacity-80 transition-opacity duration-300">{{ button_label|default('Enregistrer') }}</button>
+{{ form_errors(form) }}
 {{ form_end(form) }}
