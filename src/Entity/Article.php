@@ -15,6 +15,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: '`article`')]
 #[UniqueEntity(fields: ['name'])]
+#[ORM\HasLifecycleCallbacks]
+
 class Article
 {
     use TimestampableTrait;
@@ -45,12 +47,24 @@ class Article
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_name = null;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'articles')]
+    #[ORM\JoinTable(name: 'order_article')]
     private Collection $orders;
+
+    #[ORM\OneToMany(mappedBy: 'article', targetEntity: OrderArticle::class, cascade: ['persist'])]
+    private Collection $orderArticles;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+    }
+
+    #[ORM\PreRemove]
+    public function checkForOrders(): void
+    {
+        if ($this->orders->count() > 0) {
+            throw new \Exception('Cannot delete an article that is linked to an order.');
+        }
     }
 
     public function getId(): ?int
