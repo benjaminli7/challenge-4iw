@@ -1,0 +1,45 @@
+{% extends 'base_front.html.twig' %}
+
+{% block title %}Contact{% endblock %}
+
+{% block body %}
+    <h1 class="text-3xl font-bold mb-4">Contactez-nous</h1>
+
+    {% if app.flashes('success') %}
+        <div class="bg-green-200 text-green-700 px-4 py-2 mb-4 rounded">
+            {% for message in app.flashes('success') %}
+                {{ message }}
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <div class="max-w-lg mx-auto">
+        {{ form_start(form, { 'attr': { 'class': 'mt-8' } }) }}
+        <div class="mb-4">
+            {{ form_label(form.name, 'Votre nom', { 'class': 'block font-medium mb-2' }) }}
+            {{ form_widget(form.name, { 'class': 'form-input w-full' }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_label(form.email, 'Votre adresse e-mail', { 'class': 'block font-medium mb-2' }) }}
+            {{ form_widget(form.email, { 'class': 'form-input w-full' }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_label(form.subject, 'Sujet', { 'class': 'block font-medium mb-2' }) }}
+            {{ form_widget(form.subject, { 'class': 'form-input w-full' }) }}
+        </div>
+
+        <div class="mb-4">
+            {{ form_label(form.message, 'Message', { 'class': 'block font-medium mb-2' }) }}
+            {{ form_widget(form.message, { 'class': 'form-textarea w-full' }) }}
+        </div>
+
+        <div class="mt-6">
+            <button type="submit" class="btn btn-primary">
+                Envoyer
+            </button>
+        </div>
+        {{ form_end(form) }}
+    </div>
+{% endblock %}

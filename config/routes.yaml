@@ -34,3 +34,11 @@ admin_promotions_delete:
 admin_promotions_list:
     path: /admin/promotions
     controller: App\Controller\Back\PromotionController::list
+
+contact:
+    path: /contact
+    controller: App\Controller\Back\ContactController::index
+
+admin_messages_list:
+    path: /admin/contacts
+    controller: App\Controller\Back\ContactController::list
