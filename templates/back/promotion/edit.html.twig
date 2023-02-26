@@ -1,0 +1,22 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Édition de la promotion "{{ promotion.name }}"{% endblock %}
+
+{% block content %}
+    <h1>Édition de la promotion "{{ promotion.name }}"</h1>
+
+    {{ form_start(form) }}
+
+    {{ form_row(form.name) }}
+    {{ form_row(form.description) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.value) }}
+    {{ form_row(form.startAt) }}
+    {{ form_row(form.endAt) }}
+
+    <button type="submit" class="btn btn-primary mt-3">Mettre à jour la promotion</button>
+
+    {{ form_end(form) }}
+
+    <a href="{{ path('admin_promotions_delete', {'id': promotion.id}) }}" class="btn btn-danger mt-3" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette promotion ?');">Supprimer la promotion</a>
+{% endblock %}

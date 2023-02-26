@@ -1,0 +1,18 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Création d'une promotion{% endblock %}
+
+{% block content %}
+    <h1>Création d'une promotion</h1>
+
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.type) }}
+    {{ form_row(form.value) }}
+    {{ form_row(form.startAt) }}
+    {{ form_row(form.endAt) }}
+
+    <button type="submit" class="btn btn-primary mt-3">Créer la promotion</button>
+
+    {{ form_end(form) }}
+{% endblock %}

@@ -1,0 +1,38 @@
+{% extends 'base_back.html.twig' %}
+
+{% block title %}Liste des promotions{% endblock %}
+
+{% block content %}
+    <h1>Liste des promotions</h1>
+
+    <a href="{{ path('admin_promotions_create') }}" class="btn btn-primary mb-3">Créer une promotion</a>
+
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Nom</th>
+                <th>Description</th>
+                <th>Type</th>
+                <th>Valeur</th>
+                <th>Date de début</th>
+                <th>Date de fin</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for promotion in promotions %}
+                <tr>
+                    <td>{{ promotion.name }}</td>
+                    <td>{{ promotion.description }}</td>
+                    <td>{{ promotion.type }}</td>
+                    <td>{{ promotion.value }}</td>
+                    <td>{{ promotion.startAt|date('d/m/Y') }}</td>
+                    <td>{{ promotion.endAt|date('d/m/Y') }}</td>
+                    <td>
+                        <a href="{{ path('admin_promotions_edit', {'id': promotion.id}) }}" class="btn btn-primary btn-sm">Éditer</a>
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

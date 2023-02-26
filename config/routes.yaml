@@ -19,3 +19,18 @@ controllers_employee:
     name_prefix: employee_
     prefix: /employee/
 
+admin_promotions_create:
+    path: /admin/promotions/creer
+    controller: App\Controller\Back\PromotionController::create
+
+admin_promotions_edit:
+    path: /admin/promotions/modifier/{id}
+    controller: App\Controller\Back\PromotionController::edit
+
+admin_promotions_delete:
+    path: /admin/promotions/supprimer/{id}
+    controller: App\Controller\Back\PromotionController::delete
+
+admin_promotions_list:
+    path: /admin/promotions
+    controller: App\Controller\Back\PromotionController::list
