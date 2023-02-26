@@ -72,7 +72,7 @@ class DashboardController extends AbstractController
         $stats[] = ['label' => 'Nombre de commandes aujourd\'hui', 'value' => $totalOrdersToday];
         $stats[] = ['label' => 'Nombre de nouveaux clients aujourd\'hui', 'value' => $newCustomersToday];
         $stats[] = ['label' => 'Nombre d\'articles vendus aujourd\'hui', 'value' => $totalArticleSoldToday];
-        $stats[] = ['label' => 'Revenu de la journée', 'value' => $totalSoldToday];
+        $stats[] = ['label' => 'Revenu de la journée', 'value' => $totalSoldToday . " €"];
         $stats[] = ['label' => 'Meilleur employé du jour', 'value' => $bestEmployee];
 
 
