@@ -103,7 +103,7 @@
                                 {% for review in reviews %}
                                     <div class="swiper-slide">
                                         <div href="#" class="flex flex-col items-center justify-center h-full m-auto text-center max-w-sm p-3 bg-white border border-primary-pink rounded-lg shadow hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
-                                            <h5 class="text-primary-pink mb-2 text-2xl font-bold tracking-tight dark:text-white">{{ review.user.firstname }} {{ review.user.lastname|slice(0,1)}}.</h5>
+                                            <h5 class="text-primary-pink mb-2 text-2xl font-bold tracking-tight dark:text-white">{{ review.user.firstname }} {{ review.user.lastname|slice(0,1)|upper }}.</h5>
                                             <p class="text-primary-pink font-normal dark:text-gray-400">{{ review.note }} / 5</p>
                                             <p class="text-primary-pink trunc font-normal dark:text-gray-400">{{ review.comment }}</p>
                                         </div>
