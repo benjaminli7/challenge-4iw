@@ -8,6 +8,8 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Doctrine\DBAL\Exception\ForeignKeyConstraintViolationException;
+
 
 #[Route('/category')]
 class CategoryController extends AbstractController
@@ -55,8 +57,8 @@ class CategoryController extends AbstractController
             try {
                 $categoryRepository->remove($category, true);
                 $this->addFlash('success', 'Category has been deleted successfully.');
-            } catch (\Exception $e) {
-                $this->addFlash('error', $e->getMessage());
+            } catch (ForeignKeyConstraintViolationException $e) {
+                $this->addFlash('danger', 'One or more orders are linked to this category.');
             }
         } else {
             $this->addFlash('error', 'Invalid CSRF token.');
