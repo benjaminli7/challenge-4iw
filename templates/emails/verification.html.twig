@@ -1,6 +1,11 @@
-<p>
-    Please click the link below to verify your email:
-</p>
-<p>
-    {{ confirm_link }}
-</p>
+{% extends 'base_email.html.twig' %}
+
+{% block body %}
+
+  <h1 style="color: #4D5E80; font-weight:400;">Bonjour {{ firstName }} {{ lastName }},</span></h1>
+  <p style="color: #7D8FB3; line-height: 1.7em;">
+    Vous pouvez activer votre compte en cliquant sur le lien ci-dessous : <br>
+    <a href="{{ confirm_link }}">{{ confirm_link }}</a>
+  </p>
+
+{% endblock %}

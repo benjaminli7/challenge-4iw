@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\PdfRepository;
-use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: PdfRepository::class)]
@@ -22,7 +21,7 @@ class Pdf
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     private ?\DateTimeInterface $date = null;
-
+    
     public function getId(): ?int
     {
         return $this->id;
