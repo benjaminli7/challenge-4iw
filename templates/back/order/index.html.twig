@@ -4,7 +4,12 @@
 
 {% block body %}
     <h1 class="title-back">Historique des commandes</h1>
-
+    <form method="post" action="{{ path('app_pdf_generate_orders') }}">
+        <button type="submit" class="btn-pink">
+            <i class="fa fa-file" aria-hidden="true"></i>
+            Générer PDF
+        </button>
+    </form>
     <table id="table_id" class="styled-table">
         <thead>
             <tr>
@@ -44,12 +49,7 @@
             {% endfor %}
         </tbody>
     </table>
-    <form method="post" action="{{ path('app_pdf_generate_orders') }}">
-    <button type="submit" class="btn btn-outline-primary btn-lg">
-        <i class="fa fa-file-pdf-o" aria-hidden="true"></i>
-        Générer PDF
-    </button>
-</form>
+
 
 {% endblock %}
 
