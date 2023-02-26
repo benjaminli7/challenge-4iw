@@ -115,4 +115,14 @@ class Order
         return $this;
     }
 
+    public function getTotalAmount()
+    {
+        $total = 0;
+        foreach ($this->orderArticles as $orderArticle) {
+            $total += $orderArticle->getArticle()->getPrice() * $orderArticle->getQuantity();
+        }
+        return $total;
+    }
+
+
 }
