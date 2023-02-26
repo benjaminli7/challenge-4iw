@@ -34,8 +34,15 @@ services:
             $token: '%env(TWILIO_AUTH_TOKEN)%'
             $phone_number: '%env(TWILIO_PHONE_NUMBER)%'
         autowire: true
-
-
+    App\EventListener\ArticleListener:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\EventListener\CategoryListener:
+        tags:
+            - { name: doctrine.event_subscriber }
+    App\EventListener\UserListener:
+        tags:
+            - { name: doctrine.event_subscriber }
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

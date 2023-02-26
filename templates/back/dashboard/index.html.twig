@@ -1,9 +1,20 @@
 {% extends 'base_back.html.twig' %}
 
-{% block title %}Dashboard view!{% endblock %}
+{% block title %}
+    B+B - Dashboard
+{% endblock %}
 
 {% block body %}
-    <div>
-        <h1>Dashboard view</h1>
+    <h1 class="title-back">Dashboard</h1>
+
+    <div class="md:grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 place-items-center flex flex-col gap-8">
+        {% for stat in stats %}
+            <div class="block w-full h-full p-6 bg-white border border-gray-200 rounded-lg shadow">
+                <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{{ stat.label }}</h5>
+                <p class="font-normal text-gray-700 dark:text-gray-400">{{ stat.value }}</p>
+            </div>
+        {% endfor %}
     </div>
+
+
 {% endblock %}

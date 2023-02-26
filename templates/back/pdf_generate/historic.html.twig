@@ -1,0 +1,30 @@
+{% block content %}
+    <h1 style="text-align: center; margin-bottom: 2rem;">Historique des commandes</h1>
+
+    <table style="width: 100%; border-collapse: collapse; border: 1px solid #ccc;">
+        <thead>
+            <tr>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Numéro de commande</th>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Date</th>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Montant</th>
+                <th style="padding: 0.5rem; text-align: left; border: 1px solid #ccc;">Articles</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">{{ order.id }}</td>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">{{ order.date|date('Y/m/d H:i:s') }}</td>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">{{ order.getTotalPrice() }} €</td>
+                    <td style="padding: 0.5rem; border: 1px solid #ccc;">
+                        {% for orderArticle in order.orderArticles %}
+                            <div style="border-bottom: 1px solid #ccc; padding-bottom: 0.5rem;">
+                                <span class="font-bold">{{ orderArticle.article.name }}</span> (x{{ orderArticle.quantity }}) - {{ orderArticle.article.price }} €
+                            </div>
+                        {% endfor %}
+                    </td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

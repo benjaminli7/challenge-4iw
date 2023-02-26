@@ -15,6 +15,8 @@ use Vich\UploaderBundle\Mapping\Annotation as Vich;
 #[ORM\Entity(repositoryClass: ArticleRepository::class)]
 #[ORM\Table(name: '`article`')]
 #[UniqueEntity(fields: ['name'])]
+#[ORM\HasLifecycleCallbacks]
+
 class Article
 {
     use TimestampableTrait;
@@ -34,7 +36,6 @@ class Article
     #[Assert\Type('float', message: 'Cette valeur doit être un nombre ou un chiffre.')]
     private ?float $price = null;
 
-
     #[ORM\Column]
     private ?int $orderCount = 0;
 
@@ -45,12 +46,27 @@ class Article
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $image_name = null;
 
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'articles')]
+    #[ORM\ManyToMany(targetEntity: Order::class)]
+    #[ORM\JoinColumn(name: "article_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+    #[ORM\InverseJoinColumn(name: "order_id", referencedColumnName: "id", nullable: false, onDelete: "CASCADE")]
+
     private Collection $orders;
+
+    #[ORM\ManyToMany(targetEntity: Tag::class, mappedBy: 'articles')]
+    private Collection $tags;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
+        $this->tags = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection<int, Tag>
+     */
+    public function getTags(): Collection
+    {
+        return $this->tags;
     }
 
     public function getId(): ?int
@@ -126,22 +142,28 @@ class Article
         return $this->orders;
     }
 
-    public function addOrder(Order $order): self
+    public function addTag(Tag $tag): self
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->addArticle($this);
+        if (!$this->tags->contains($tag)) {
+            $this->tags[] = $tag;
+            $tag->addArticle($this);
         }
 
         return $this;
     }
 
-    public function removeOrder(Order $order): self
+    public function removeTag(Tag $tag): self
     {
-        if ($this->orders->removeElement($order)) {
-            $order->removeArticle($this);
+        if ($this->tags->contains($tag)) {
+            $this->tags->removeElement($tag);
+            $tag->removeArticle($this);
         }
 
         return $this;
+    }
+
+    public function getOrderArticles()
+    {
+        return $this->orders;
     }
 }

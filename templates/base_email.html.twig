@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Base email</title>
+    <style type="text/css">
+      body {
+        margin: 0!important;
+      }
+
+      @media only screen and (max-width: 576px) {
+        .padding {
+          padding: 50px 25px!important;
+        }
+        .container {
+          max-width: 300px!important;
+        }
+
+        .footer {
+          font-size: 12px!important;
+        }
+
+        table {
+          font-size: 12px!important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div style="background-color: #EDF0F2; height: 100%; padding: 25px 0;" >
+        <img src="https://esgi.bburger.ovh/images/logo.png" alt="logo-b+b" style="display:block; margin: 0 auto 25px auto;"/>
+
+      <div class="container" style="max-width: 600px; margin: 0 auto;background-color: #ffffff; border-radius: 10px; box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;">
+        <div class="padding" style="padding: 50px 100px;">
+          {% block body %} {% endblock %}
+          <hr style="margin: 30px 0; border:none; border-top: 1px solid #EDF0F2">
+          <span>L'équipe B+B</span>
+        </div>
+      </div>
+      <div class="footer" style="text-align: center">
+        <p>Vous pouvez accéder à notre site à l'adresse suivante : <a href="https://esgi.bburger.ovh/">https://esgi.bburger.ovh/</a></p>
+        <p style="color: #7D8FB3">B+B, 242 Rue du Faubourg Saint-Antoine, 75012 Paris</p>
+      </div>
+    </div>
+  </body>
+</html>
+
