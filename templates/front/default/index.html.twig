@@ -53,6 +53,14 @@
                                     <h5 class="mb-1 text-xl font-medium text-gray-900 dark:text-white">
                                         {{ article.name }}
                                     </h5>
+                                    <div class="mb-3">
+                                        {% for tag in article.tags %}
+                                            <span style="background-color:{{ tag.color }}"
+                                                class="text-black text-xs font-medium mr-2 px-2.5 py-0.5 rounded">
+                                                {{ tag.name }}
+                                            </span>
+                                        {% endfor %}
+                                    </div>
                                     <span class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ article.price }} €
                                     </span>
