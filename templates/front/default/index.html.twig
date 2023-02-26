@@ -64,8 +64,15 @@
                                     <span class="text-sm text-gray-500 dark:text-gray-400">
                                         {{ article.price }} €
                                     </span>
-                                    <div class="flex mt-4 space-x-3 md:mt-6">
-                                        <button class="add-to-cart w-[150px] justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
+                                    <div class="wrapper flex mt-4 space-x-3 md:mt-6" data-article="{{ article.id }}">
+                                        <button class="remove-from-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
+                                            data-article-id="{{ article.id }}">
+                                            <i class="text-front-red fa-solid fa-minus">
+
+                                            </i>
+                                        </button>
+                                        <span>0</span>
+                                        <button class="add-to-cart justify-center inline-flex items-center px-4 py-2 text-sm font-medium text-center border border-gray-200 shadow rounded-lg hover:shadow-md transition-shadow"
                                             data-article-id="{{ article.id }}">
                                             <i class="text-front-red fa-solid fa-plus">
 
@@ -153,12 +160,49 @@
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             var addToCartButtons = document.querySelectorAll('.add-to-cart');
+            var removeFromCartButtons = document.querySelectorAll('.remove-from-cart');
+
+
+
+
+
+            removeFromCartButtons.forEach(function(button) {
+                button.addEventListener('click', function(event) {
+                    event.preventDefault();
+                    var articleId = button.dataset.articleId;
+                    let countWrapper = document.querySelector(`[data-article="${articleId}"]`);
+                    let articleCount = countWrapper.querySelector('span');
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('POST', '/cart/remove-from-cart/' +
+                        articleId);
+                    xhr.setRequestHeader('Content-Type',
+                        'application/x-www-form-urlencoded');
+                    xhr.onreadystatechange =
+                        function() {
+                            if (xhr.readyState === XMLHttpRequest.DONE && xhr.status ===
+                                200) {
+                                var response = JSON.parse(xhr.responseText);
+                                if (response.success) {
+                                    var cartItemCount =
+                                        document.getElementById('cart-item-count');
+                                    var count =
+                                        response.cartItemCount;
+                                    var itemCount = response.itemCount;
+                                    cartItemCount.textContent = count;
+                                    articleCount.textContent = itemCount
+                                }
+                            }
+                        };
+                    xhr.send();
+                });
+            });
 
             addToCartButtons.forEach(function(button) {
                 button.addEventListener('click', function(event) {
                     event.preventDefault();
                     var articleId = button.dataset.articleId;
-
+                    let countWrapper = document.querySelector(`[data-article="${articleId}"]`);
+                    let articleCount = countWrapper.querySelector('span');
                     var xhr = new XMLHttpRequest();
                     xhr.open('POST', '/cart/add-to-cart/' +
                         articleId);
@@ -174,7 +218,10 @@
                                         document.getElementById('cart-item-count');
                                     var count =
                                         response.cartItemCount;
+                                    var itemCount = response.itemCount;
+
                                     cartItemCount.textContent = count;
+                                    articleCount.textContent = itemCount
                                 }
                             }
                         };

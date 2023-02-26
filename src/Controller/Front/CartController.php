@@ -36,7 +36,7 @@ class CartController extends AbstractController
         foreach ($cart as $articleId => $quantity) {
             $article = $articleRepository->find($articleId);
 
-            if ($article) {
+            if ($quantity['quantity'] > 0) {
                 $priceTotal += $article->getPrice() * $quantity['quantity'];
                 $cartArticles[] = [
                     'article' => $article,
@@ -51,6 +51,28 @@ class CartController extends AbstractController
         ]);
     }
 
+    #[Route('/remove-from-cart/{id}', name: 'remove_from_cart')]
+    public function removeFromCart(Request $request, Article $article): JsonResponse
+    {
+        $cart = $request->getSession()->get('cart', []);
+
+        if(isset($cart[$article->getId()])) {
+            if($cart[$article->getId()]['quantity'] > 0) {
+                $cart[$article->getId()]['quantity']--;
+            }
+        }
+
+
+        $request->getSession()->set('cart', $cart);
+
+        $cartItemCount = $this->getCartItemCount($request);
+
+        return new JsonResponse([
+            'success' => true,
+            'cartItemCount' => $cartItemCount,
+            'itemCount' => $cart[$article->getId()]['quantity'],
+        ]);
+    }
 
     #[Route('/add-to-cart/{id}', name: 'add_to_cart')]
     public function addToCart(Request $request, Article $article): JsonResponse
@@ -73,6 +95,7 @@ class CartController extends AbstractController
         return new JsonResponse([
             'success' => true,
             'cartItemCount' => $cartItemCount,
+            'itemCount' => $cart[$article->getId()]['quantity'],
         ]);
     }
 
@@ -80,6 +103,10 @@ class CartController extends AbstractController
     public function checkout(Request $request): Response
     {
         $cart = $request->getSession()->get('cart', []);
+
+        if(!$this->getLineItems($cart)) {
+            return $this->redirectToRoute('client_app_cart');
+        }
 
         $baseUrl = $request->getSchemeAndHttpHost();
 

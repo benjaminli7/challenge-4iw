@@ -18,6 +18,8 @@ class DefaultController extends AbstractController
     #[Route('/', name: 'default_index')]
     public function index(Request $request, CategoryRepository $categoryRepository, ReviewRepository $reviewRepository): Response
     {
+        $request->getSession()->remove('cart');
+
         $form = $this->createForm(ReviewType::class);
         $reviews = $reviewRepository->findBy(['approved' => true]);
 
