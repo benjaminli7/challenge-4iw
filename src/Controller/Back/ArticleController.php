@@ -98,8 +98,8 @@ class ArticleController extends AbstractController
             if ($this->isCsrfTokenValid('delete' . $article->getId(), $request->request->get('_token'))) {
                 $articleRepository->remove($article, true);
             }
-        } catch (ForeignKeyConstraintViolationException $e) {
-            $this->addFlash('danger', 'Cannot delete this article because it is linked to one or more orders.');
+        } catch (\Exception $e ) {
+            $this->addFlash('danger', $e->getMessage());
         }
 
         return $this->redirectToRoute('admin_app_menu', [], Response::HTTP_SEE_OTHER);
